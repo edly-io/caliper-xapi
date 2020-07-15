@@ -1,0 +1,4 @@
+[run]
+branch = True
+include = edx_analytics_transformers*
+omit = */*performance*, */*integration*, */admin.py, */apps.py

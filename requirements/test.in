@@ -1,0 +1,18 @@
+# Requirements for test runs.
+
+-c constraints.txt
+
+-r base.txt               # Core dependencies for this package
+
+edx-lint
+pycodestyle
+mock
+factory-boy
+ddt
+pytest-cov
+
+# required for tests involving django models
+pytest-django
+
+# required to run use pytest-django without a manage.py file
+# pytest-pythonpath
