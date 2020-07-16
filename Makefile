@@ -24,13 +24,7 @@ test.setup: ## install dependencies for running tests
 test: test.unit test.integration test.performance ## run all tests
 
 test.unit: test.setup ## run unit tests
-	pytest --cov-report=html --cov-report term-missing --cov-branch -s -k 'not integration and not performance' --cov-fail-under=95 --cov=edx_analytics_transformers
-
-test.integration: test.setup ## run integration tests
-	pytest --verbose -s -k 'integration'
-
-test.performance: test.setup ## run performance tests
-	pytest --verbose -s -k 'performance'
+	pytest --cov-report=html --cov-report term-missing --cov-branch --cov-fail-under=95 --cov=edx_analytics_transformers
 
 style: ## run pycodestyle on the code
 	pycodestyle edx_analytics_transformers

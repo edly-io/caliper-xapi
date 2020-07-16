@@ -11,6 +11,7 @@ EVENT_ACTION_MAP = {
     'problem_check': 'Submitted',
     'edx.grades.problem.submitted': 'Submitted',
     'showanswer': 'Viewed',
+    'problem_show': 'Viewed',
     'edx.problem.hint.demandhint_displayed': 'Viewed',
     'edx.problem.completed': 'Completed'
 }
@@ -19,6 +20,7 @@ OBJECT_TYPE_MAP = {
     'problem_check': 'Assessment',
     'edx.grades.problem.submitted': 'Assessment',
     'showanswer': 'Frame',
+    'problem_show': 'Frame',
     'edx.problem.hint.demandhint_displayed': 'Frame',
     'edx.problem.completed': 'AssessmentItem'
 }
@@ -27,6 +29,7 @@ EVENT_TYPE_MAP = {
     'problem_check': 'AssessmentEvent',
     'edx.grades.problem.submitted': 'AssessmentEvent',
     'showanswer': 'ViewEvent',
+    'problem_show': 'ViewEvent',
     'edx.problem.hint.demandhint_displayed': 'ViewEvent',
     'edx.problem.completed': 'AssessmentItemEvent'
 }
@@ -35,6 +38,7 @@ EVENT_TYPE_MAP = {
 @TransformerRegistry.register('problem_check')
 @TransformerRegistry.register('edx.grades.problem.submitted')
 @TransformerRegistry.register('showanswer')
+@TransformerRegistry.register('problem_show')
 @TransformerRegistry.register('edx.problem.hint.demandhint_displayed')
 @TransformerRegistry.register('edx.problem.completed')
 class ProblemEventsTransformers(CaliperTransformer):

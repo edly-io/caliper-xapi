@@ -49,7 +49,7 @@ README = io.open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding
 REQUIREMENTS = load_requirements('requirements/base.in')
 
 setup(
-    name='event-analytics-transformers',
+    name='event_analytics_transformers',
     version='0.1.0',
     packages=find_packages(),
     include_package_data=True,

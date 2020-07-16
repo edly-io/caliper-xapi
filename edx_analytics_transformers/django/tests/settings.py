@@ -21,8 +21,6 @@ INSTALLED_APPS = [
     'edx_analytics_transformers.django'
 ]
 
-EVENT_TRACKING_ENABLED = True
-
 SECRET_KEY = "test_key"
 
 LMS_ROOT_URL = 'http://localhost:18000'
