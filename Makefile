@@ -16,12 +16,12 @@ clean: ## delete most git-ignored files
 	coverage erase
 	find -name '*.pyc' -delete
 
-ci: test.unit test.integration style lint ## run all tests and quality checks that are used in CI
+ci: test.unit style lint ## run all tests and quality checks that are used in CI
 
 test.setup: ## install dependencies for running tests
 	pip install -r requirements/dev.txt -q
 
-test: test.unit test.integration test.performance ## run all tests
+test: test.unit ## run all tests
 
 test.unit: test.setup ## run unit tests
 	pytest --cov-report=html --cov-report term-missing --cov-branch --cov-fail-under=95 --cov=edx_analytics_transformers
