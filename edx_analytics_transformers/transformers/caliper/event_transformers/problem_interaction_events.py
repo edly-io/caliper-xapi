@@ -38,7 +38,6 @@ EVENT_TYPE_MAP = {
 @TransformerRegistry.register('problem_check')
 @TransformerRegistry.register('edx.grades.problem.submitted')
 @TransformerRegistry.register('showanswer')
-@TransformerRegistry.register('problem_show')
 @TransformerRegistry.register('edx.problem.hint.demandhint_displayed')
 @TransformerRegistry.register('edx.problem.completed')
 class ProblemEventsTransformers(CaliperTransformer):
