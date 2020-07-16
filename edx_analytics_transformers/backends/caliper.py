@@ -2,12 +2,12 @@
 Caliper event processing backend
 """
 import json
-from celery.utils.log import get_task_logger
+from logging import getLogger
 
 from edx_analytics_transformers.transformers.caliper.registry import TransformerRegistry
 from edx_analytics_transformers.transformers.caliper.exceptions import NoTransformerImplemented
 
-logger = get_task_logger(__name__)
+logger = getLogger(__name__)
 
 
 class CaliperBackend:
@@ -20,7 +20,6 @@ class CaliperBackend:
         """
         Process the passed event.
         """
-        logger.info('NEW APP')
         logger.info('CALIER: before transformation')
         logger.info(json.dumps(event))
 
