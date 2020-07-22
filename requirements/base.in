@@ -8,3 +8,6 @@ pytz
 six
 python-dateutil
 isodate
+django-model-utils
+edx-django-utils
+jsonfield2

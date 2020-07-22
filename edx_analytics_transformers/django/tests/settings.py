@@ -18,7 +18,8 @@ MIDDLEWARE = (
 )
 
 INSTALLED_APPS = [
-    'edx_analytics_transformers.django'
+    'edx_analytics_transformers.django',
+    'jsonfield2'
 ]
 
 SECRET_KEY = "test_key"

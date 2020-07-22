@@ -17,8 +17,11 @@ codecov==2.1.8            # via -r requirements/travis.txt
 coverage==5.2             # via -r requirements/test.txt, -r requirements/travis.txt, codecov, pytest-cov
 ddt==1.4.1                # via -r requirements/test.txt
 distlib==0.3.1            # via -r requirements/travis.txt, virtualenv
-django==2.2.14            # via -c requirements/constraints.txt, -r requirements/test.txt
+django-model-utils==4.0.0  # via -r requirements/test.txt
+django-waffle==1.0.0      # via -r requirements/test.txt, edx-django-utils
+django==2.2.14            # via -c requirements/constraints.txt, -r requirements/test.txt, django-model-utils, edx-django-utils, jsonfield2
 docutils==0.16            # via sphinx
+edx-django-utils==3.3.0   # via -r requirements/test.txt
 edx-lint==1.5.0           # via -r requirements/dev.in, -r requirements/test.txt
 filelock==3.0.12          # via -r requirements/travis.txt, tox, virtualenv
 idna==2.10                # via -r requirements/travis.txt, requests
@@ -28,15 +31,18 @@ importlib-resources==3.0.0  # via -r requirements/travis.txt, virtualenv
 isodate==0.6.0            # via -r requirements/test.txt
 isort==4.3.21             # via -r requirements/test.txt, pylint
 jinja2==2.11.2            # via sphinx
+jsonfield2==4.0.0.post0   # via -r requirements/test.txt
 lazy-object-proxy==1.4.3  # via -r requirements/test.txt, astroid
 markupsafe==1.1.1         # via jinja2
 mccabe==0.6.1             # via -r requirements/test.txt, pylint
 mock==3.0.5               # via -c requirements/constraints.txt, -r requirements/test.txt
 more-itertools==8.4.0     # via -r requirements/test.txt, pytest
+newrelic==5.14.1.144      # via -r requirements/test.txt, edx-django-utils
 packaging==20.4           # via -r requirements/test.txt, -r requirements/travis.txt, pytest, sphinx, tox
 pathlib2==2.3.5           # via -r requirements/test.txt, pytest
 pip-tools==5.2.1          # via -r requirements/dev.in, -r requirements/pip-tools.txt
 pluggy==0.13.1            # via -r requirements/test.txt, -r requirements/travis.txt, pytest, tox
+psutil==1.2.1             # via -r requirements/test.txt, edx-django-utils
 py==1.9.0                 # via -r requirements/test.txt, -r requirements/travis.txt, pytest, tox
 pycodestyle==2.6.0        # via -r requirements/dev.in, -r requirements/test.txt
 pygments==2.6.1           # via sphinx

@@ -17,6 +17,7 @@ class TransformerRegistry:
         Decorator to register a transformer for an event
         """
         def __inner__(transformer):
+            # TODO: check for existing transformer
             cls.mapping[event_key] = transformer
             return transformer
 

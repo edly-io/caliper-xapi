@@ -159,6 +159,7 @@ class PlayPauseVideoTransformer(BaseVideoTransformer):
     """
     Transform the events fired when a video is played or paused.
     """
+    # TODO: avoid concating. Make another variable
     transforming_fields = BaseVideoTransformer.transforming_fields + ('target', )
 
     def get_object(self, current_event, caliper_event):
