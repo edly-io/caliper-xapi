@@ -25,6 +25,13 @@ class NavigationEventsTransformers(CaliperTransformer):
     def get_object(self, current_event, caliper_event):
         """
         Return transformed object for caliper event.
+
+        Arguments:
+            current_event (dict):   untransformed event
+            caliper_event (dict):   transformed event
+
+        Returns:
+            dict
         """
         caliper_object = caliper_event['object']
         data = current_event['data']

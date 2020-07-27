@@ -10,3 +10,4 @@ mock
 ddt
 pytest-cov
 pytest-django
+factory-boy

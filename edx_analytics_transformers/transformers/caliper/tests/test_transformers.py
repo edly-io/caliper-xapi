@@ -7,10 +7,14 @@ import os
 import ddt
 from mock import patch
 
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from edx_analytics_transformers.django.tests.factories import UserFactory
 from edx_analytics_transformers.transformers.caliper.registry import TransformerRegistry
 
+
+User = get_user_model()
 
 TEST_DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -36,11 +40,15 @@ class TestTransformers(TestCase):
     # no limit to diff in the output of tests
     maxDiff = None
 
-    @patch('edx_analytics_transformers.transformers.caliper.base_transformer.get_user_model')
+    def setUp(self):
+        super(TestTransformers, self).setUp()
+        UserFactory.create(username='edx')
+
     @patch('edx_analytics_transformers.transformers.caliper.event_transformers.enrollment_events.reverse',
            side_effect=mocked_course_reverse)
     @ddt.data(*EVENT_FIXTURE_FILENAMES)
     def test_event_transformer(self, event_filename, *_):
+
         input_event_file_path = '{test_dir}/fixtures/current/{event_filename}'.format(
             test_dir=TEST_DIR_PATH, event_filename=event_filename
         )

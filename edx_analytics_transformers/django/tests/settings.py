@@ -1,4 +1,6 @@
-"""A Django settings file for testing"""
+"""
+A Django settings file for testing
+"""
 
 from __future__ import absolute_import
 
@@ -18,8 +20,9 @@ MIDDLEWARE = (
 )
 
 INSTALLED_APPS = [
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     'edx_analytics_transformers.django',
-    'jsonfield2'
 ]
 
 SECRET_KEY = "test_key"

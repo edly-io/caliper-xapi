@@ -7,7 +7,7 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-class XAPIBackend:
+class XApiBackend:
     """
     Backend to transform events into xAPI compliant format
     and then route those events to configured endpoints.

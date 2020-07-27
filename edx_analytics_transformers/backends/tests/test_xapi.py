@@ -1,4 +1,6 @@
-"""Test the xapi backend"""
+"""
+Test the xAPI backend.
+"""
 
 from __future__ import absolute_import
 
@@ -6,18 +8,18 @@ from unittest import TestCase
 
 from mock import call, patch, sentinel
 
-from edx_analytics_transformers.backends.xapi import XAPIBackend
+from edx_analytics_transformers.backends.xapi import XApiBackend
 
 
-class TestXAPIBackend(TestCase):
+class TestXApiBackend(TestCase):
     """Test cases for XAPI backend"""
 
     def setUp(self):
-        super(TestXAPIBackend, self).setUp()
+        super(TestXApiBackend, self).setUp()
         self.sample_event = {
             'name': sentinel.name
         }
-        self.backend = XAPIBackend()
+        self.backend = XApiBackend()
 
     @patch('edx_analytics_transformers.backends.xapi.logger')
     def test_send_method(self, mocked_logger):

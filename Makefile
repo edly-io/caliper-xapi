@@ -1,8 +1,8 @@
 export DJANGO_SETTINGS_MODULE=edx_analytics_transformers.django.tests.settings
-export PYTHONPATH=$(PWD)
 
 MAKE_DOC=make -C doc
 SETUP=python setup.py
+PYTEST=python -m pytest
 
 .PHONY: lint requirements style test.unit upgrade
 
@@ -24,7 +24,7 @@ test.setup: ## install dependencies for running tests
 test: test.unit ## run all tests
 
 test.unit: test.setup ## run unit tests
-	pytest --cov-report=html --cov-report term-missing --cov-branch --cov-fail-under=95 --cov=edx_analytics_transformers
+	$(PYTEST) --cov-report=html --cov-report term-missing --cov-branch --cov-fail-under=95 --cov=edx_analytics_transformers
 
 style: ## run pycodestyle on the code
 	pycodestyle edx_analytics_transformers
@@ -33,10 +33,10 @@ lint: ## run pylint on the code
 	pylint --reports=y edx_analytics_transformers
 
 install: ## install the event-tracking package locally
-	python setup.py install
+	$(SETUP) install
 
 develop:
-	python setup.py develop
+	$(SETUP) develop
 
 doc: doc.html ## generate the documentation
 

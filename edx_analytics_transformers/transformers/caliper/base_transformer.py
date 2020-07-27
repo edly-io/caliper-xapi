@@ -16,6 +16,7 @@ from edx_analytics_transformers.transformers.caliper.helpers import convert_date
 CALIPER_EVENT_CONTEXT = 'http://purl.imsglobal.org/ctx/caliper/v1p1'
 
 logger = getLogger()
+User = get_user_model()
 
 
 class CaliperTransformer:
@@ -31,11 +32,17 @@ class CaliperTransformer:
     )
 
     def __init__(self, event):
+        """
+        Initialize the transformer with the event to be transformed.
+
+        Arguments:
+            event (dict):   event to be transformed
+        """
         self.event = event.copy()
 
     def json_load_event(self):
         """
-        Save the JSON decoded event into current event's "data".
+        Update the current event's `data` value with JSON decoded dict if its a string.
         """
         if isinstance(self.event['data'], six.string_types):
             self.event['data'] = json.loads(self.event['data'])
@@ -43,6 +50,9 @@ class CaliperTransformer:
     def transform(self):
         """
         Transform the edX event into Caliper event.
+
+        Returns:
+            dict
         """
         transformed_event = {}
         self._base_transform(transformed_event)
@@ -66,6 +76,9 @@ class CaliperTransformer:
     def _base_transform(self, transformed_event):
         """
         Transform common Caliper fields.
+
+        Arguments:
+            transformed_event (dict)   : partially transformed event
         """
         self._add_generic_fields(transformed_event)
         self._add_actor_info(transformed_event)
@@ -74,6 +87,9 @@ class CaliperTransformer:
     def _add_generic_fields(self, transformed_event):
         """
         Add all of the generic fields to the transformed_event object.
+
+        Arguments:
+            transformed_event (dict)   : partially transformed event
         """
         transformed_event.update({
             '@context': CALIPER_EVENT_CONTEXT,
@@ -89,6 +105,9 @@ class CaliperTransformer:
     def _add_actor_info(self, transformed_event):
         """
         Add all generic information related to `actor`.
+
+        Arguments:
+            transformed_event (dict)   : partially transformed event
         """
         anonymous_id = self._generate_anonymous_id()
 
@@ -101,9 +120,10 @@ class CaliperTransformer:
         """
         Generate anonymous user id using the username and course_id
         in the event data. If no anonymous id is generated, return "anonymous"
-        """
-        User = get_user_model()
 
+        Returns:
+            str
+        """
         # Prefer None over empty course_id
         course_id = self.event['context'].get('course_id') or None
         username = self.event['context'].get('username')
@@ -122,6 +142,9 @@ class CaliperTransformer:
     def _add_referrer(self, transformed_event):
         """
         Adds information of an Entity that represents the referring context.
+
+        Arguments:
+            transformed_event (dict)   : partially transformed event
         """
         transformed_event['referrer'] = {
             'id': self.event['context'].get('referer'),

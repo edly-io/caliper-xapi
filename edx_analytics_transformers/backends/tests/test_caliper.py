@@ -1,4 +1,6 @@
-"""Test the caliper backend"""
+"""
+Test the caliper backend.
+"""
 
 from __future__ import absolute_import
 
@@ -18,7 +20,12 @@ class TestCaliperBackend(TestCase):
         self.sample_event = {
             'name': str(sentinel.name)
         }
-        self.backend = CaliperBackend()
+        self.routers = {
+            '0': MagicMock(),
+            '1': MagicMock(),
+        }
+
+        self.backend = CaliperBackend(routers=self.routers)
 
     @patch('edx_analytics_transformers.backends.caliper.logger')
     def test_send_method_with_no_transformer_implemented(self, mocked_logger):
@@ -41,7 +48,7 @@ class TestCaliperBackend(TestCase):
 
     @patch('edx_analytics_transformers.backends.caliper.TransformerRegistry.get_transformer')
     @patch('edx_analytics_transformers.backends.caliper.logger')
-    def test_send_method_with_successfull_transformation(self, mocked_logger, mocked_get_transformer):
+    def test_send_method_with_successfull_flow(self, mocked_logger, mocked_get_transformer):
         transformed_event = {
             'transformed_key': 'transformed_value'
         }
@@ -52,3 +59,6 @@ class TestCaliperBackend(TestCase):
         self.backend.send(self.sample_event)
 
         self.assertIn(call(json.dumps(transformed_event)), mocked_logger.mock_calls)
+
+        for _, router in self.routers.items():
+            router.send.assert_called_once_with(self.sample_event, transformed_event)

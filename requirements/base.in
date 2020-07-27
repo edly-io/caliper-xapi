@@ -11,3 +11,5 @@ isodate
 django-model-utils
 edx-django-utils
 jsonfield2
+
+# TODO: Add eventtracking here

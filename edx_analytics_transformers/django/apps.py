@@ -7,8 +7,7 @@ from django.apps import AppConfig
 
 class EdxAnalyticsTransformersConfig(AppConfig):
     """
-    Django 1.8 requires unique app labels and only uses the characters to the right of the
-    last period in the string. .django was not specific enough.
+    AppConfig class for the app.
     """
 
     name = 'edx_analytics_transformers.django'
@@ -16,8 +15,9 @@ class EdxAnalyticsTransformersConfig(AppConfig):
 
     def ready(self):
         """
-        Initialize django specific tracker.
+        Import the signals and transformers for initialization.
         """
         super(EdxAnalyticsTransformersConfig, self).ready()
         # pylint: disable=import-outside-toplevel, unused-import
+        from edx_analytics_transformers import signals
         from edx_analytics_transformers.transformers.caliper import event_transformers

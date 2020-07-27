@@ -16,8 +16,11 @@ def convert_datetime(current_datetime):
     """
     Convert provided datetime into UTC format.
 
-    @param datetime: datetime string.
-    :return: UTC formatted datetime string.
+    Arguments:
+        current_datetime (str):     datetime string
+
+    Returns:
+        str
     """
 
     # convert current_datetime to a datetime object if it is string
@@ -35,6 +38,12 @@ def convert_datetime(current_datetime):
 def get_block_id_from_event_referrer(event):
     """
     Derive and return block id from event referrer
+
+    Arguments:
+        event (dict):   event dictionary object.
+
+    Returns:
+        str or `None`
     """
     try:
         parsed = urlparse(event['context']['referer'])

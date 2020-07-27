@@ -17,21 +17,21 @@ logger = getLogger(__name__)
 @receiver([post_save, post_delete], sender=RouterConfigFilter)
 def invalidate_backend_router_cache(instance, *args, **kwargs):   # pylint: disable=unused-argument
     """
-    Delete router's cache for a backend if a backend's filter is updated, deleted
-    or a new one is created.
+    Delete a router config object from cache.
+
+    Since we use the last modified config object for a backend,
+    delete the router's cache for a backend if that backend's
+    router is updated, deleted or a new one is created.
+
+    Arguments:
+        instance (RouterConfigFilter):      Instance being updated/created or deleted
     """
-    logger.info('Filter for backend "%s" is updated. '
-                'Invalidating filter cache for this backend '
-                'as well as the default filter.', instance.backend_name)
+    logger.info('Router for backend "%s" is updated. '
+                'Invalidating router cache for this backend '
+                'as well as the default router.', instance.backend_name)
+
     key = get_cache_key(
         namespace=ROUTER_CACHE_NAMESPACE,
         backend_name=instance.backend_name
     )
     TieredCache.delete_all_tiers(key)
-
-    # # cache key if no backend is specified
-    # key = get_cache_key(
-    #     namespace=ROUTER_CACHE_NAMESPACE,
-    #     backend_name=None
-    # )
-    # TieredCache.delete_all_tiers(key)

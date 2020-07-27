@@ -7,7 +7,7 @@
 django-model-utils==4.0.0  # via -r requirements/base.in
 django-waffle==1.0.0      # via edx-django-utils
 django==2.2.14            # via -c requirements/constraints.txt, -r requirements/base.in, django-model-utils, edx-django-utils, jsonfield2
-edx-django-utils==3.3.0   # via -r requirements/base.in
+edx-django-utils==3.5.0   # via -r requirements/base.in
 isodate==0.6.0            # via -r requirements/base.in
 jsonfield2==4.0.0.post0   # via -r requirements/base.in
 newrelic==5.14.1.144      # via edx-django-utils

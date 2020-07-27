@@ -22,17 +22,31 @@ class EnrollmentEventTransformers(CaliperTransformer):
 
     type = 'Event'
 
-    def get_action(self, event, _):
+    def get_action(self, current_event, _):
         """
         Return action for caliper event.
+
+        Arguments:
+            current_event (dict):   untransformed event
+            _             (dict):   transformed event
+
+        Returns:
+            str
         """
-        if event['name'] == 'edx.course.enrollment.activated':
+        if current_event['name'] == 'edx.course.enrollment.activated':
             return 'Activated'
         return 'Deactivated'
 
     def get_object(self, current_event, _):
         """
         Return transformed object for caliper event.
+
+        Arguments:
+            current_event (dict):   untransformed event
+            _             (dict):   transformed event
+
+        Returns:
+            dict
         """
         data = current_event['data'].copy()
         data.pop('user_id')
