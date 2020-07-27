@@ -17,7 +17,7 @@ def pytest_configure(config):
     _load_signals()
 
 
-def _mock_third_party_modules(config):
+def _mock_third_party_modules(_):
     """
     Mock third party modules used in the app.
 

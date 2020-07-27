@@ -7,23 +7,23 @@ from django.test import TestCase
 
 from edx_django_utils.cache import TieredCache
 
-from edx_analytics_transformers.django.tests.factories import RouterConfigFilterFactory
-from edx_analytics_transformers.django.models import RouterConfigFilter
+from edx_analytics_transformers.django.tests.factories import RouterConfigurationsFactory
+from edx_analytics_transformers.django.models import RouterConfigurations
 
 
 @ddt.ddt
-class TestRouterConfigFilter(TestCase):
+class TestRouterConfigurations(TestCase):
     """
-    Test RouterConfigFilter model
+    Test RouterConfigurations model
     """
 
     def setUp(self):
-        super(TestRouterConfigFilter, self).setUp()
+        super(TestRouterConfigurations, self).setUp()
         TieredCache.dangerous_clear_all_tiers()
 
     def test_get_latest_router(self):
         # With no existing filters, it should return None
-        self.assertIsNone(RouterConfigFilter.get_latest_enabled_router('test'))
+        self.assertIsNone(RouterConfigurations.get_latest_enabled_router('test'))
 
         first_enabled = []
         first_disabled = []
@@ -31,38 +31,38 @@ class TestRouterConfigFilter(TestCase):
         second_disabled = []
 
         for _ in range(5):
-            first_enabled.append(RouterConfigFilterFactory(is_enabled=True, backend_name='first'))
-            first_disabled.append(RouterConfigFilterFactory(is_enabled=False, backend_name='first'))
-            second_enabled.append(RouterConfigFilterFactory(is_enabled=True, backend_name='second'))
-            second_disabled.append(RouterConfigFilterFactory(is_enabled=False, backend_name='second'))
+            first_enabled.append(RouterConfigurationsFactory(is_enabled=True, backend_name='first'))
+            first_disabled.append(RouterConfigurationsFactory(is_enabled=False, backend_name='first'))
+            second_enabled.append(RouterConfigurationsFactory(is_enabled=True, backend_name='second'))
+            second_disabled.append(RouterConfigurationsFactory(is_enabled=False, backend_name='second'))
 
         # test with backend name
-        self.assertEqual(first_enabled[4], RouterConfigFilter.get_latest_enabled_router('first'))
+        self.assertEqual(first_enabled[4], RouterConfigurations.get_latest_enabled_router('first'))
 
         # test enabling a filter
         first_disabled[2].is_enabled = True
         first_disabled[2].save()
 
-        self.assertEqual(first_disabled[2], RouterConfigFilter.get_latest_enabled_router('first'))
-        self.assertEqual(second_enabled[4], RouterConfigFilter.get_latest_enabled_router('second'))
+        self.assertEqual(first_disabled[2], RouterConfigurations.get_latest_enabled_router('first'))
+        self.assertEqual(second_enabled[4], RouterConfigurations.get_latest_enabled_router('second'))
 
         # test modifying an enabled filter
         second_enabled[1].save()
 
-        self.assertEqual(first_disabled[2], RouterConfigFilter.get_latest_enabled_router('first'))
-        self.assertEqual(second_enabled[1], RouterConfigFilter.get_latest_enabled_router('second'))
+        self.assertEqual(first_disabled[2], RouterConfigurations.get_latest_enabled_router('first'))
+        self.assertEqual(second_enabled[1], RouterConfigurations.get_latest_enabled_router('second'))
 
-    @patch('edx_analytics_transformers.django.models.RouterConfigFilter.objects.filter',
-           side_effect=RouterConfigFilter.objects.filter)
+    @patch('edx_analytics_transformers.django.models.RouterConfigurations.objects.filter',
+           side_effect=RouterConfigurations.objects.filter)
     @patch('edx_analytics_transformers.django.models.logger')
     def test_latest_router_caching(self, mocked_logger, mocked_objects_filter):
-        first_router = RouterConfigFilterFactory(
+        first_router = RouterConfigurationsFactory(
             configurations='{}',
             is_enabled=True,
             backend_name='first'
         )
 
-        router = RouterConfigFilter.get_latest_enabled_router(backend_name='first')
+        router = RouterConfigurations.get_latest_enabled_router(backend_name='first')
 
         self.assertEqual(router, first_router)
         mocked_objects_filter.assert_called_once_with(is_enabled=True, backend_name='first')
@@ -79,7 +79,7 @@ class TestRouterConfigFilter(TestCase):
         mocked_logger.reset_mock()
         mocked_objects_filter.reset_mock()
 
-        router = RouterConfigFilter.get_latest_enabled_router(backend_name='first')
+        router = RouterConfigurations.get_latest_enabled_router(backend_name='first')
         mocked_objects_filter.assert_not_called()
         mocked_logger.info.assert_called_once_with('Router is found in cache for backend "%s"', 'first')
 
@@ -124,7 +124,7 @@ class TestRouterConfigFilter(TestCase):
             'transformed_key': 'transformed_value'
         }
 
-        router = RouterConfigFilterFactory(
+        router = RouterConfigurationsFactory(
             configurations=config_fixture,
             is_enabled=True,
             backend_name='first'

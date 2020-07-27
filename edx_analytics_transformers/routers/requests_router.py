@@ -5,7 +5,7 @@ import logging
 import requests
 
 from eventtracking.processors.exceptions import EventEmissionExit
-from edx_analytics_transformers.django.models import RouterConfigFilter
+from edx_analytics_transformers.django.models import RouterConfigurations
 
 
 logger = logging.getLogger(__name__)
@@ -59,7 +59,7 @@ class RequestsRouter:
         logger.info('Successfully processed event %s for router with backend %s',
                     original_event['name'], self.backend_name)
 
-        router = RouterConfigFilter.get_latest_enabled_router(self.backend_name)
+        router = RouterConfigurations.get_latest_enabled_router(self.backend_name)
         if not router:
             logger.info('Could not find an enabled router configurations for backend %s', self.backend_name)
             return

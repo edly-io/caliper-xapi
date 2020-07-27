@@ -8,13 +8,13 @@ from django.dispatch import receiver
 
 from edx_django_utils.cache import TieredCache, get_cache_key
 
-from edx_analytics_transformers.django.models import RouterConfigFilter, ROUTER_CACHE_NAMESPACE
+from edx_analytics_transformers.django.models import RouterConfigurations, ROUTER_CACHE_NAMESPACE
 
 
 logger = getLogger(__name__)
 
 
-@receiver([post_save, post_delete], sender=RouterConfigFilter)
+@receiver([post_save, post_delete], sender=RouterConfigurations)
 def invalidate_backend_router_cache(instance, *args, **kwargs):   # pylint: disable=unused-argument
     """
     Delete a router config object from cache.
@@ -24,7 +24,7 @@ def invalidate_backend_router_cache(instance, *args, **kwargs):   # pylint: disa
     router is updated, deleted or a new one is created.
 
     Arguments:
-        instance (RouterConfigFilter):      Instance being updated/created or deleted
+        instance (RouterConfigurations):      Instance being updated/created or deleted
     """
     logger.info('Router for backend "%s" is updated. '
                 'Invalidating router cache for this backend '

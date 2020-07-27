@@ -49,9 +49,9 @@ def get_value_from_dotted_path(dict_obj, dotted_key):
     return result
 
 
-class RouterConfigFilter(TimeStampedModel):
+class RouterConfigurations(TimeStampedModel):
     """
-    This filter uses regular expressions to filter the events
+    Configurations for filtering and then routing events to hosts.
     """
 
     backend_name = models.CharField(
@@ -97,7 +97,7 @@ class RouterConfigFilter(TimeStampedModel):
             backend_name (str):    Name of the backend for which the filter is required.
 
         Returns:
-            RouterConfigFilter or None
+            RouterConfigurations or None
         """
         return cls._get_latest_cached_router(backend_name=backend_name)
 
@@ -127,7 +127,7 @@ class RouterConfigFilter(TimeStampedModel):
             backend_name (str):    Name of the backend for which the router is required.
 
         Returns:
-            RouterConfigFilter` or None
+            RouterConfigurations` or None
         """
         router_cache_key = cls.generate_cache_key(backend_name=backend_name)
         cache_response = TieredCache.get_cached_response(router_cache_key)
@@ -155,7 +155,7 @@ class RouterConfigFilter(TimeStampedModel):
             backend_name (str):    Name of the backend for which the filter is required.
 
         Returns:
-            RouterConfigFilter or None
+            RouterConfigurations or None
         """
         queryset = cls.objects.filter(backend_name=backend_name, is_enabled=True)
 
