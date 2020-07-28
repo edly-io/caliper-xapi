@@ -1,7 +1,15 @@
 """
 Registry to keep track of event transforems
 """
-from edx_analytics_transformers.transformers.caliper.exceptions import NoTransformerImplemented
+from logging import getLogger
+
+from edx_analytics_transformers.transformers.caliper.exceptions import (
+    NoTransformerImplemented,
+    TransformerAlreadyExitsts
+)
+
+
+logger = getLogger(__name__)
 
 
 class TransformerRegistry:
@@ -12,7 +20,7 @@ class TransformerRegistry:
     mapping = {}
 
     @classmethod
-    def register(cls, event_key):
+    def register(cls, event_key, override_if_exists=False):
         """
         Decorator to register a transformer for an event
 
@@ -26,8 +34,28 @@ class TransformerRegistry:
             Arguments:
                 transformer (class):    transformer class for one or more events.
             """
-            # TODO: check for existing transformer
-            cls.mapping[event_key] = transformer
+            if event_key in cls.mapping:
+                if not override_if_exists:
+                    raise TransformerAlreadyExitsts
+                else:
+                    logger.info(
+                        'Overriding the existing transfromer {old_transformer} for event '
+                        '{event_name} with {new_transformer}'.format(
+                            old_transformer=cls.mapping[event_key],
+                            new_transformer=transformer,
+                            event_name=event_key
+                        )
+                    )
+                    cls.mapping[event_key] = transformer
+
+            else:
+                logger.info(
+                    'Registered transfromer {transformer} for event {event_name} '.format(
+                        transformer=transformer,
+                        event_name=event_key
+                    )
+                )
+                cls.mapping[event_key] = transformer
             return transformer
 
         return __inner__

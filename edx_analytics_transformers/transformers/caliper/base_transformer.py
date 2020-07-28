@@ -118,24 +118,23 @@ class CaliperTransformer:
 
     def _generate_anonymous_id(self):
         """
-        Generate anonymous user id using the username and course_id
-        in the event data. If no anonymous id is generated, return "anonymous"
+        Generate anonymous user id.
+
+        If no anonymous id is generated, return "anonymous"
 
         Returns:
             str
         """
-        # Prefer None over empty course_id
-        course_id = self.event['context'].get('course_id') or None
         username = self.event['context'].get('username')
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            logger.error('User with username "%s" does not exist. '
-                         'Cannot generate anonymous ID', username)
+            logger.info('User with username "%s" does not exist. '
+                        'Cannot generate anonymous ID', username)
 
             anonymous_id = 'anonymous'
         else:
-            anonymous_id = anonymous_id_for_user(user, course_id)
+            anonymous_id = anonymous_id_for_user(user, None)
 
         return anonymous_id
 

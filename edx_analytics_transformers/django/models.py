@@ -102,19 +102,6 @@ class RouterConfigurations(TimeStampedModel):
         return cls._get_latest_cached_router(backend_name=backend_name)
 
     @classmethod
-    def generate_cache_key(cls, **kwargs):
-        """
-        Return cache key using the provided kwargs.
-        We are using the type parameter to avoid the name clashes if
-        "backend_name" is being used to cache anything else.
-        """
-        cache_params = {
-            'namespace': ROUTER_CACHE_NAMESPACE,
-        }
-        cache_params.update(kwargs)
-        return get_cache_key(**cache_params)
-
-    @classmethod
     def _get_latest_cached_router(cls, backend_name):
         """
         Return the last modified, enabled router for the backend matching the `backend_name`.
@@ -129,7 +116,7 @@ class RouterConfigurations(TimeStampedModel):
         Returns:
             RouterConfigurations` or None
         """
-        router_cache_key = cls.generate_cache_key(backend_name=backend_name)
+        router_cache_key = get_cache_key(namespace=ROUTER_CACHE_NAMESPACE, backend_name=backend_name)
         cache_response = TieredCache.get_cached_response(router_cache_key)
 
         if cache_response.is_found:
