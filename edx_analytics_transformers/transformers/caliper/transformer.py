@@ -9,10 +9,9 @@ from django.contrib.auth import get_user_model
 from student.models import anonymous_id_for_user    # pylint: disable=import-error
 
 from edx_analytics_transformers.transformers.base_transformer import BaseTransformer
+from edx_analytics_transformers.transformers.caliper.constants import CALIPER_EVENT_CONTEXT
 from edx_analytics_transformers.transformers.caliper.helpers import convert_datetime
 
-
-CALIPER_EVENT_CONTEXT = 'http://purl.imsglobal.org/ctx/caliper/v1p1'
 
 logger = getLogger()
 User = get_user_model()
