@@ -37,16 +37,16 @@ class TransformerRegistry:
             if event_key in cls.mapping:
                 if not override_if_exists:
                     raise TransformerAlreadyExitsts
-                else:
-                    logger.info(
-                        'Overriding the existing transfromer {old_transformer} for event '
-                        '{event_name} with {new_transformer}'.format(
-                            old_transformer=cls.mapping[event_key],
-                            new_transformer=transformer,
-                            event_name=event_key
-                        )
+
+                logger.info(
+                    'Overriding the existing transfromer {old_transformer} for event '
+                    '{event_name} with {new_transformer}'.format(
+                        old_transformer=cls.mapping[event_key],
+                        new_transformer=transformer,
+                        event_name=event_key
                     )
-                    cls.mapping[event_key] = transformer
+                )
+                cls.mapping[event_key] = transformer
 
             else:
                 logger.info(
