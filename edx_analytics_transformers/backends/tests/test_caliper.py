@@ -35,7 +35,10 @@ class TestCaliperBackend(TestCase):
             self.sample_event.get('name')
         )
 
-    @patch('edx_analytics_transformers.backends.caliper.TransformerRegistry.get_transformer', side_effect=ValueError)
+    @patch(
+        'edx_analytics_transformers.backends.caliper.CaliperTransformersRegistry.get_transformer',
+        side_effect=ValueError
+    )
     @patch('edx_analytics_transformers.backends.caliper.logger')
     def test_send_method_with_unknown_exception(self, mocked_logger, _):
         with self.assertRaises(ValueError):
@@ -46,7 +49,7 @@ class TestCaliperBackend(TestCase):
             ' Caliper format. Error: %s', self.sample_event['name'], ANY
         )
 
-    @patch('edx_analytics_transformers.backends.caliper.TransformerRegistry.get_transformer')
+    @patch('edx_analytics_transformers.backends.caliper.CaliperTransformersRegistry.get_transformer')
     @patch('edx_analytics_transformers.backends.caliper.logger')
     def test_send_method_with_successfull_flow(self, mocked_logger, mocked_get_transformer):
         transformed_event = {

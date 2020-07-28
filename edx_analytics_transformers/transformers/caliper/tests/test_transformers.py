@@ -5,13 +5,14 @@ import json
 import os
 
 import ddt
-from mock import patch
+from mock import MagicMock, patch
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from edx_analytics_transformers.transformers.exceptions import TransformerAlreadyExitsts
 from edx_analytics_transformers.django.tests.factories import UserFactory
-from edx_analytics_transformers.transformers.caliper.registry import TransformerRegistry
+from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
 
 User = get_user_model()
@@ -62,7 +63,7 @@ class TestTransformers(TestCase):
             expected_event = json.loads(expected.read())
 
             # actual_transformed_event = transform_event(original_event)
-            actual_transformed_event = TransformerRegistry.get_transformer(original_event).transform()
+            actual_transformed_event = CaliperTransformersRegistry.get_transformer(original_event).transform()
 
             # id is a randomly generated UUID therefore not comparing that
             self.assertIn('id', actual_transformed_event)
@@ -70,3 +71,12 @@ class TestTransformers(TestCase):
             actual_transformed_event.pop('id')
 
             self.assertDictEqual(expected_event, actual_transformed_event)
+
+    def test_duplicate_transformer_exception(self):
+        test_transformer = MagicMock()
+        CaliperTransformersRegistry.register('test_event')(test_transformer)
+
+        with self.assertRaises(TransformerAlreadyExitsts):
+            CaliperTransformersRegistry.register('test_event')(test_transformer)
+
+        CaliperTransformersRegistry.register('test_event', override_if_exists=True)(test_transformer)

@@ -3,8 +3,8 @@ Transformers for problem interaction events.
 """
 from edx_analytics_transformers.transformers.caliper.helpers import get_block_id_from_event_referrer
 
-from edx_analytics_transformers.transformers.caliper.base_transformer import CaliperTransformer
-from edx_analytics_transformers.transformers.caliper.registry import TransformerRegistry
+from edx_analytics_transformers.transformers.caliper.transformer import CaliperTransformer
+from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
 
 EVENT_ACTION_MAP = {
@@ -35,11 +35,11 @@ EVENT_TYPE_MAP = {
 }
 
 
-@TransformerRegistry.register('problem_check')
-@TransformerRegistry.register('edx.grades.problem.submitted')
-@TransformerRegistry.register('showanswer')
-@TransformerRegistry.register('edx.problem.hint.demandhint_displayed')
-@TransformerRegistry.register('edx.problem.completed')
+@CaliperTransformersRegistry.register('problem_check')
+@CaliperTransformersRegistry.register('edx.grades.problem.submitted')
+@CaliperTransformersRegistry.register('showanswer')
+@CaliperTransformersRegistry.register('edx.problem.hint.demandhint_displayed')
+@CaliperTransformersRegistry.register('edx.problem.completed')
 class ProblemEventsTransformers(CaliperTransformer):
     """
     Transform problem interaction related events into caliper format.

@@ -1,16 +1,16 @@
 """
 Transformers for navigation related events.
 """
-from edx_analytics_transformers.transformers.caliper.base_transformer import CaliperTransformer
-from edx_analytics_transformers.transformers.caliper.registry import TransformerRegistry
+from edx_analytics_transformers.transformers.caliper.transformer import CaliperTransformer
+from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
 
-@TransformerRegistry.register('edx.ui.lms.sequence.next_selected')
-@TransformerRegistry.register('edx.ui.lms.sequence.previous_selected')
-@TransformerRegistry.register('edx.ui.lms.sequence.tab_selected')
-@TransformerRegistry.register('edx.ui.lms.link_clicked')
-@TransformerRegistry.register('edx.ui.lms.sequence.outline.selected')
-@TransformerRegistry.register('edx.ui.lms.outline.selected')
+@CaliperTransformersRegistry.register('edx.ui.lms.sequence.next_selected')
+@CaliperTransformersRegistry.register('edx.ui.lms.sequence.previous_selected')
+@CaliperTransformersRegistry.register('edx.ui.lms.sequence.tab_selected')
+@CaliperTransformersRegistry.register('edx.ui.lms.link_clicked')
+@CaliperTransformersRegistry.register('edx.ui.lms.sequence.outline.selected')
+@CaliperTransformersRegistry.register('edx.ui.lms.outline.selected')
 class NavigationEventsTransformers(CaliperTransformer):
     """
     These events are generated when the user navigates through

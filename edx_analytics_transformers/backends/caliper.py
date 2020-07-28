@@ -4,8 +4,9 @@ Caliper event processing backend
 import json
 from logging import getLogger
 
-from edx_analytics_transformers.transformers.caliper.registry import TransformerRegistry
-from edx_analytics_transformers.transformers.caliper.exceptions import NoTransformerImplemented
+from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
+from edx_analytics_transformers.transformers.exceptions import NoTransformerImplemented
+
 
 logger = getLogger(__name__)
 
@@ -56,7 +57,7 @@ class CaliperBackend:
         logger.info('Going to transform event "%s" into Caliper format', event_name)
 
         try:
-            transformed_event = TransformerRegistry.get_transformer(event).transform()
+            transformed_event = CaliperTransformersRegistry.get_transformer(event).transform()
 
         except NoTransformerImplemented:
             logger.error('Could not get transformer for %s event.', event.get('name'))

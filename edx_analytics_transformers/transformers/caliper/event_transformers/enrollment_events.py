@@ -4,12 +4,12 @@ Transformers for enrollment related events.
 from django.conf import settings
 from django.urls import reverse
 
-from edx_analytics_transformers.transformers.caliper.base_transformer import CaliperTransformer
-from edx_analytics_transformers.transformers.caliper.registry import TransformerRegistry
+from edx_analytics_transformers.transformers.caliper.transformer import CaliperTransformer
+from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
 
-@TransformerRegistry.register('edx.course.enrollment.activated')
-@TransformerRegistry.register('edx.course.enrollment.deactivated')
+@CaliperTransformersRegistry.register('edx.course.enrollment.activated')
+@CaliperTransformersRegistry.register('edx.course.enrollment.deactivated')
 class EnrollmentEventTransformers(CaliperTransformer):
     """
     This transformer transformes two events:

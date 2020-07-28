@@ -174,7 +174,6 @@ class RouterConfigurations(TimeStampedModel):
             _              (dict):         transformed event dict
             host_config    (dict):         host configurations dict
         """
-        # TODO: add support for keys matching transformed event
         for key, value in iteritems(host_config['match_params']):
             if get_value_from_dotted_path(original_event, key) != value:
                 return False

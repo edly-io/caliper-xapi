@@ -26,8 +26,8 @@ from datetime import timedelta
 
 from isodate import duration_isoformat
 
-from edx_analytics_transformers.transformers.caliper.base_transformer import CaliperTransformer
-from edx_analytics_transformers.transformers.caliper.registry import TransformerRegistry
+from edx_analytics_transformers.transformers.caliper.transformer import CaliperTransformer
+from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
 
 EVENTS_ACTION_MAP = {
@@ -141,8 +141,8 @@ class BaseVideoTransformer(CaliperTransformer):
         return transformed_event
 
 
-@TransformerRegistry.register('load_video')
-@TransformerRegistry.register('edx.video.loaded')
+@CaliperTransformersRegistry.register('load_video')
+@CaliperTransformersRegistry.register('edx.video.loaded')
 class LoadVideoTransformer(BaseVideoTransformer):
     """
     Transform the events fired when a video is loaded.
@@ -166,10 +166,10 @@ class LoadVideoTransformer(BaseVideoTransformer):
         return caliper_object
 
 
-@TransformerRegistry.register('stop_video')
-@TransformerRegistry.register('edx.video.stopped')
-@TransformerRegistry.register('complete_video')
-@TransformerRegistry.register('edx.video.completed')
+@CaliperTransformersRegistry.register('stop_video')
+@CaliperTransformersRegistry.register('edx.video.stopped')
+@CaliperTransformersRegistry.register('complete_video')
+@CaliperTransformersRegistry.register('edx.video.completed')
 class StopVideoTransformer(BaseVideoTransformer):
     """
     Transform the events fired when a video is completed.
@@ -199,16 +199,15 @@ class StopVideoTransformer(BaseVideoTransformer):
         return caliper_object
 
 
-@TransformerRegistry.register('play_video')
-@TransformerRegistry.register('edx.video.played')
-@TransformerRegistry.register('pause_video')
-@TransformerRegistry.register('edx.video.paused')
+@CaliperTransformersRegistry.register('play_video')
+@CaliperTransformersRegistry.register('edx.video.played')
+@CaliperTransformersRegistry.register('pause_video')
+@CaliperTransformersRegistry.register('edx.video.paused')
 class PlayPauseVideoTransformer(BaseVideoTransformer):
     """
     Transform the events fired when a video is played or paused.
     """
-    # TODO: avoid concating. Make another variable
-    transforming_fields = BaseVideoTransformer.transforming_fields + ('target', )
+    additional_fields = ('target', )
 
     def get_object(self, current_event, caliper_event):
         """
@@ -253,8 +252,8 @@ class PlayPauseVideoTransformer(BaseVideoTransformer):
         }
 
 
-@TransformerRegistry.register('seek_video')
-@TransformerRegistry.register('edx.video.position.changed')
+@CaliperTransformersRegistry.register('seek_video')
+@CaliperTransformersRegistry.register('edx.video.position.changed')
 class SeekVideoTransformer(BaseVideoTransformer):
     """
     Transform the events fired when a video is seeked.
