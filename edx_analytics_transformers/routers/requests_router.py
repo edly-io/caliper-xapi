@@ -102,10 +102,18 @@ class RequestsRouter:
         return event
 
     def dispatch_event(self, event, host_config):
+        """
+        Send event to configured host.
+
+        Arguments:
+            event (dict)        : event dictionary to be delivered.
+            host_config (dict)  : contains configurations for the host.
+        """
         client = HttpClient(
             host=host_config['URL'],
             auth_scheme=host_config.get('AUTH_SCHEME'),
             api_key=host_config.get('API_KEY'),
             headers=host_config.get('HEADERS')
         )
+
         return client.send(event)

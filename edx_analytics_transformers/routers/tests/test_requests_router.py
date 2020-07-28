@@ -16,10 +16,10 @@ ROUTER_CONFIG_FIXTURE = [
             'data.key': 'value'
         },
         'host_configurations': {
-            'url': 'http://test1.com',
-            'headers': {
-                'authorization': 'Token test'
-            }
+            'URL': 'http://test1.com',
+            'HEADERS': {},
+            'AUTH_SCHEME': 'Bearer',
+            'API_KEY': 'test_key'
         }
     },
     {
@@ -27,10 +27,10 @@ ROUTER_CONFIG_FIXTURE = [
             'non_existing.id.value': 'test'
         },
         'host_configurations': {
-            'url': 'http://test2.com',
-            'headers': {
-                'authorization': 'Token test'
-            }
+            'URL': 'http://test2.com',
+            'HEADERS': {},
+            'AUTH_SCHEME': 'Bearer',
+            'API_KEY': 'test_key'
         }
     },
     {
@@ -38,10 +38,10 @@ ROUTER_CONFIG_FIXTURE = [
             'event_type': 'edx.test.event'
         },
         'host_configurations': {
-            'url': 'http://test3.com',
-            'headers': {
-                'authorization': 'Token test'
-            }
+            'URL': 'http://test3.com',
+            'HEADERS': {},
+            'AUTH_SCHEME': 'Bearer',
+            'API_KEY': 'test_key'
         }
     },
 ]
@@ -75,7 +75,7 @@ class TestRequestsRouter(TestCase):
 
         self.router = RequestsRouter(processors=[], backend_name='test')
 
-    @patch('edx_analytics_transformers.routers.requests_router.requests.post')
+    @patch('edx_analytics_transformers.utils.http_client.requests.post')
     @patch('edx_analytics_transformers.routers.requests_router.logger')
     def test_with_processor_exception(self, mocked_logger, mocked_post):
         processors = [
@@ -101,7 +101,7 @@ class TestRequestsRouter(TestCase):
             exc_info=True
         ), mocked_logger.info.mock_calls)
 
-    @patch('edx_analytics_transformers.routers.requests_router.requests.post')
+    @patch('edx_analytics_transformers.utils.http_client.requests.post')
     @patch('edx_analytics_transformers.routers.requests_router.logger')
     def test_with_no_router_configurations_available(self, mocked_logger, mocked_post):
         router = RequestsRouter(processors=[], backend_name='test')
@@ -114,7 +114,7 @@ class TestRequestsRouter(TestCase):
             mocked_logger.info.mock_calls
         )
 
-    @patch('edx_analytics_transformers.routers.requests_router.requests.post')
+    @patch('edx_analytics_transformers.utils.http_client.requests.post')
     @patch('edx_analytics_transformers.routers.requests_router.logger')
     def test_with_no_available_hosts(self, mocked_logger, mocked_post):
         RouterConfigurationsFactory.create(
@@ -136,8 +136,16 @@ class TestRequestsRouter(TestCase):
             mocked_logger.info.mock_calls
         )
 
-    @patch('edx_analytics_transformers.routers.requests_router.requests.post')
+    @patch('edx_analytics_transformers.utils.http_client.requests.post')
     def test_successful_routing_of_event(self, mocked_post):
+
+        def _make_headers(host_config):
+            headers = host_config['HEADERS']
+            headers['Authorization'] = '{} {}'.format(
+                host_config['AUTH_SCHEME'],
+                host_config['API_KEY']
+            )
+            return headers
 
         RouterConfigurationsFactory.create(
             backend_name='test_routing',
@@ -148,24 +156,28 @@ class TestRequestsRouter(TestCase):
         router = RequestsRouter(processors=[], backend_name='test_routing')
         router.send(self.sample_event, self.transformed_event)
 
+        headers = [
+            _make_headers(host['host_configurations']) for host in ROUTER_CONFIG_FIXTURE
+        ]
+
         mocked_post.assert_has_calls([
             call(
-                ROUTER_CONFIG_FIXTURE[0]['host_configurations']['url'],
+                ROUTER_CONFIG_FIXTURE[0]['host_configurations']['URL'],
                 json=self.transformed_event,
-                headers=ROUTER_CONFIG_FIXTURE[0]['host_configurations']['headers']
+                headers=headers[0]
             ),
             call(
-                ROUTER_CONFIG_FIXTURE[2]['host_configurations']['url'],
+                ROUTER_CONFIG_FIXTURE[2]['host_configurations']['URL'],
                 json=self.transformed_event,
-                headers=ROUTER_CONFIG_FIXTURE[2]['host_configurations']['headers']
+                headers=headers[2]
             ),
         ])
 
         self.assertNotIn(
             call(
-                ROUTER_CONFIG_FIXTURE[1]['host_configurations']['url'],
+                ROUTER_CONFIG_FIXTURE[1]['host_configurations']['URL'],
                 json=self.transformed_event,
-                headers=ROUTER_CONFIG_FIXTURE[1]['host_configurations']['headers']
+                headers=headers[1]
             ),
             mocked_post.mock_calls
         )
