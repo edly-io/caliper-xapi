@@ -3,6 +3,8 @@ Envelope the caliper transformed event.
 """
 from datetime import datetime
 
+from pytz import UTC
+
 from edx_analytics_transformers.transformers.caliper.constants import CALIPER_EVENT_CONTEXT
 from edx_analytics_transformers.transformers.caliper.helpers import convert_datetime
 
@@ -20,7 +22,7 @@ class CaliperEnvelopProcessor:
         """
         return {
             'sensor': sensor_id or self.sensor_id,
-            'sendTime': convert_datetime(str(datetime.now())),
+            'sendTime': convert_datetime(datetime.now(UTC)),
             'data': event,
             'dataVersion': CALIPER_EVENT_CONTEXT
         }

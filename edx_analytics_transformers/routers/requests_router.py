@@ -2,9 +2,10 @@
 Generic router to send events to hosts.
 """
 import logging
-import requests
 
 from eventtracking.processors.exceptions import EventEmissionExit
+
+from edx_analytics_transformers.utils.http_client import HttpClient
 from edx_analytics_transformers.django.models import RouterConfigurations
 
 
@@ -46,6 +47,7 @@ class RequestsRouter:
                 original_event['name'],
                 self.backend_name
             )
+
             processed_event = self.process_event(transformed_event)
         except EventEmissionExit:
             logger.info(
@@ -74,11 +76,7 @@ class RequestsRouter:
 
         for host in hosts:
             try:
-                requests.post(
-                    host['host_configurations']['url'],
-                    json=processed_event,
-                    headers=host['host_configurations'].get('headers', {})
-                )
+                self.dispatch_event(processed_event, host['host_configurations'])
 
                 logger.info('Event %s is sent successfully to %s.',
                             original_event['name'],
@@ -102,3 +100,12 @@ class RequestsRouter:
             event = processor(event)
 
         return event
+
+    def dispatch_event(self, event, host_config):
+        client = HttpClient(
+            host=host_config['URL'],
+            auth_scheme=host_config.get('AUTH_SCHEME'),
+            api_key=host_config.get('API_KEY'),
+            headers=host_config.get('HEADERS')
+        )
+        return client.send(event)
