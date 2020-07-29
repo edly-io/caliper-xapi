@@ -153,7 +153,7 @@ class RouterConfigurations(TimeStampedModel):
         Returns list of hosts to which the `transformed_event` is allowed to be sent.
 
         Arguments:
-            original_event (dict):          original event dict
+            original_event    (dict):       original event dict
             transformed_event (dict):       transformed event dict
         """
         allowed_hosts = []
@@ -165,14 +165,14 @@ class RouterConfigurations(TimeStampedModel):
 
         return allowed_hosts
 
-    def _match_event_for_host(self, original_event, _, host_config):
+    def _match_event_for_host(self, original_event, transformed_event, host_config):
         """
         Return True if the `original_event` matches the `match_params` in `host_config`.
 
         Arguments:
-            original_event (dict):         original event dict
-            _              (dict):         transformed event dict
-            host_config    (dict):         host configurations dict
+            original_event    (dict):     original event dict
+            transformed_event (dict):     transformed event dict
+            host_config       (dict):     host configurations dict
         """
         for key, value in iteritems(host_config['match_params']):
             if get_value_from_dotted_path(original_event, key) != value:

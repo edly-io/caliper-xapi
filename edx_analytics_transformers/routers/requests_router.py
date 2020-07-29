@@ -76,14 +76,17 @@ class RequestsRouter:
 
         for host in hosts:
             try:
-                self.dispatch_event(processed_event, host['host_configurations'])
+                url = host['host_configurations']['URL']
+
+                updated_event = self.overwrite_event_data(processed_event, host)
+                self.dispatch_event(updated_event, host['host_configurations'])
 
                 logger.info('Event %s is sent successfully to %s.',
                             original_event['name'],
-                            host['host_configurations']['url'])
+                            url)
 
             except Exception:   # pylint: disable=broad-except
-                logger.error('Failed to send event %s to %s.', exc_info=True)
+                logger.error('Failed to send event %s to %s.', original_event['name'], url, exc_info=True)
 
     def process_event(self, event):
         """
@@ -99,6 +102,26 @@ class RequestsRouter:
         for processor in self.processors:
             event = processor(event)
 
+        return event
+
+    def overwrite_event_data(self, event, host):
+        """
+        Overwrite/Add values in the event.
+
+        If there is `override_args` key in the host configurations,
+        add those keys to the event and overwrite the existing values (if any).
+
+        Arguments:
+            event (dict):   Event in which values are to be added/overwritten
+            host (dict):    Host configurations dict.
+
+        Returns:
+            dict
+        """
+        if 'override_args' in host:
+            event = event.copy()
+            event.update(host['override_args'])
+            logger.info('Overwriting event %s with values %s', event['name'], host['override_args'])
         return event
 
     def dispatch_event(self, event, host_config):

@@ -20,6 +20,9 @@ ROUTER_CONFIG_FIXTURE = [
             'HEADERS': {},
             'AUTH_SCHEME': 'Bearer',
             'API_KEY': 'test_key'
+        },
+        'override_args': {
+            'new_key': 'new_value'
         }
     },
     {
@@ -31,7 +34,8 @@ ROUTER_CONFIG_FIXTURE = [
             'HEADERS': {},
             'AUTH_SCHEME': 'Bearer',
             'API_KEY': 'test_key'
-        }
+        },
+        'override_args': {}
     },
     {
         'match_params': {
@@ -156,6 +160,9 @@ class TestRequestsRouter(TestCase):
         router = RequestsRouter(processors=[], backend_name='test_routing')
         router.send(self.sample_event, self.transformed_event)
 
+        host_0_expected_event = self.transformed_event.copy()
+        host_0_expected_event['new_key'] = 'new_value'
+
         headers = [
             _make_headers(host['host_configurations']) for host in ROUTER_CONFIG_FIXTURE
         ]
@@ -163,7 +170,7 @@ class TestRequestsRouter(TestCase):
         mocked_post.assert_has_calls([
             call(
                 ROUTER_CONFIG_FIXTURE[0]['host_configurations']['URL'],
-                json=self.transformed_event,
+                json=host_0_expected_event,
                 headers=headers[0]
             ),
             call(

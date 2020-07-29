@@ -13,15 +13,21 @@ class CaliperEnvelopProcessor:
     """
     Envelope the caliper transformed event.
     """
-    def __init__(self, sensor_id=None):
+    def __init__(self, sensor_id):
         self.sensor_id = sensor_id
 
-    def __call__(self, event, sensor_id=None):
+    def __call__(self, event):
         """
         Envelope the caliper transformed event.
+
+        Arguments:
+            event (dict):   IMS Caliper compliant event dict
+
+        Returns:
+            dict
         """
         return {
-            'sensor': sensor_id or self.sensor_id,
+            'sensor': self.sensor_id,
             'sendTime': convert_datetime(datetime.now(UTC)),
             'data': event,
             'dataVersion': CALIPER_EVENT_CONTEXT
