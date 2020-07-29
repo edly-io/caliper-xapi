@@ -24,7 +24,7 @@ test.setup: ## install dependencies for running tests
 test: test.unit ## run all tests
 
 test.unit: test.setup ## run unit tests
-	$(PYTEST) --cov-report=html --cov-report term-missing --cov-branch --cov-fail-under=95 --cov=edx_analytics_transformers
+	$(PYTEST) -s --cov-report=html --cov-report term-missing --cov-branch --cov-fail-under=95 --cov=edx_analytics_transformers
 
 style: ## run pycodestyle on the code
 	pycodestyle edx_analytics_transformers
