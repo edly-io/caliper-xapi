@@ -120,15 +120,11 @@ class TestRouterConfigurations(TestCase):
             }
         }
 
-        transformed_event = {
-            'transformed_key': 'transformed_value'
-        }
-
         router = RouterConfigurationsFactory(
             configurations=config_fixture,
             is_enabled=True,
             backend_name='first'
         )
 
-        hosts = router.get_allowed_hosts(original_event, transformed_event)
+        hosts = router.get_allowed_hosts(original_event)
         self.assertEqual(config_fixture[:1], hosts)

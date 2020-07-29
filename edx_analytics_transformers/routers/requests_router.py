@@ -62,11 +62,12 @@ class RequestsRouter:
                     original_event['name'], self.backend_name)
 
         router = RouterConfigurations.get_latest_enabled_router(self.backend_name)
+
         if not router:
             logger.info('Could not find an enabled router configurations for backend %s', self.backend_name)
             return
 
-        hosts = router.get_allowed_hosts(original_event, processed_event)
+        hosts = router.get_allowed_hosts(original_event)
         if not hosts:
             logger.info(
                 'Event %s is not allowed to be sent to any host for router with backend "%s"',
@@ -121,7 +122,7 @@ class RequestsRouter:
         if 'override_args' in host:
             event = event.copy()
             event.update(host['override_args'])
-            logger.info('Overwriting event %s with values %s', event['name'], host['override_args'])
+            logger.info('Overwriting event with values %s', host['override_args'])
         return event
 
     def dispatch_event(self, event, host_config):
