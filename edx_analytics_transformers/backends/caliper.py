@@ -8,6 +8,7 @@ from edx_analytics_transformers.transformers.caliper.registry import CaliperTran
 from edx_analytics_transformers.transformers.exceptions import NoTransformerImplemented
 
 
+caliper_logger = getLogger('caliper_tracking')
 logger = getLogger(__name__)
 
 
@@ -77,7 +78,7 @@ class CaliperBackend:
             'Successfully transformed event "%s" into Caliper format',
             event_name
         )
-        logger.info(json.dumps(transformed_event))
+        caliper_logger.info(json.dumps(transformed_event))
         return transformed_event
 
     def route_event(self, original_event, transformed_event):

@@ -50,7 +50,7 @@ class TestCaliperBackend(TestCase):
         )
 
     @patch('edx_analytics_transformers.backends.caliper.CaliperTransformersRegistry.get_transformer')
-    @patch('edx_analytics_transformers.backends.caliper.logger')
+    @patch('edx_analytics_transformers.backends.caliper.caliper_logger')
     def test_send_method_with_successfull_flow(self, mocked_logger, mocked_get_transformer):
         transformed_event = {
             'transformed_key': 'transformed_value'
