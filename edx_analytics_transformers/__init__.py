@@ -1,1 +1,1 @@
-"""A simple event tracking library"""
+"""Extensions for edx/eventtracking library"""
