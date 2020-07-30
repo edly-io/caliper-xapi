@@ -4,7 +4,7 @@ Transformers for enrollment related events.
 from django.conf import settings
 from django.urls import reverse
 
-from edx_analytics_transformers.transformers.caliper.transformer import CaliperTransformer
+from edx_analytics_transformers.transformers.caliper.caliper_transformer import CaliperTransformer
 from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
 

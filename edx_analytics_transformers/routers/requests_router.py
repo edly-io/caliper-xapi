@@ -106,24 +106,27 @@ class RequestsRouter:
 
         return event
 
-    def overwrite_event_data(self, event, host):
+    def overwrite_event_data(self, event_name, processed_event, host):
         """
-        Overwrite/Add values in the event.
+        Overwrite/Add values in the processed event.
 
         If there is `override_args` key in the host configurations,
         add those keys to the event and overwrite the existing values (if any).
 
         Arguments:
-            event (dict):   Event in which values are to be added/overwritten
-            host (dict):    Host configurations dict.
+            event_name (str):         Name of the event
+            processed_event (dict):   Event in which values are to be added/overwritten
+            host (dict):              Host configurations dict.
 
         Returns:
             dict
         """
+        event = processed_event.copy()
+
         if 'override_args' in host:
-            event = event.copy()
             event.update(host['override_args'])
-            logger.info('Overwriting event with values %s', host['override_args'])
+            logger.info('Overwriting event %s with values %s', event_name, host['override_args'])
+
         return event
 
     def dispatch_event(self, event_name, event, router_type, host_config):

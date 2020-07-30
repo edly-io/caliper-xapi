@@ -1,7 +1,7 @@
 """
 Transformers for navigation related events.
 """
-from edx_analytics_transformers.transformers.caliper.transformer import CaliperTransformer
+from edx_analytics_transformers.transformers.caliper.caliper_transformer import CaliperTransformer
 from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
 

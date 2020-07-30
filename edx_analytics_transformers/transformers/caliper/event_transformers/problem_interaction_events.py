@@ -3,7 +3,7 @@ Transformers for problem interaction events.
 """
 from edx_analytics_transformers.transformers.caliper.helpers import get_block_id_from_event_referrer
 
-from edx_analytics_transformers.transformers.caliper.transformer import CaliperTransformer
+from edx_analytics_transformers.transformers.caliper.caliper_transformer import CaliperTransformer
 from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
 

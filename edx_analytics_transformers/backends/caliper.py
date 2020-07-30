@@ -4,15 +4,15 @@ Caliper backend for transforming and routing events.
 import json
 from logging import getLogger
 
+from edx_analytics_transformers.backends.base_transformer_backend import BaseTransformerBackend
 from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
-from edx_analytics_transformers.transformers.exceptions import NoTransformerImplemented
 
 
 caliper_logger = getLogger('caliper_tracking')
 logger = getLogger(__name__)
 
 
-class CaliperBackend:
+class CaliperBackend(BaseTransformerBackend):
     """
     Caliper backend for transforming and routing events.
 
@@ -22,28 +22,7 @@ class CaliperBackend:
     Every router configured to be used MUST support the transfromed event type.
     """
 
-    def __init__(self, routers={}):     # pylint: disable=dangerous-default-value
-        """
-        Initialize CaliperBackend.
-
-        Events, after transformation, will be sent to the routers for further
-        routing of the events.
-
-        Arguments:
-            routers (dict):     Dict of router objects.
-        """
-        self.routers = routers
-
-    def send(self, event):
-        """
-        Transform and then route the event to the configured routers.
-
-        Arguments:
-            event (dict):   Event to be transformed and delivered.
-        """
-        transformed_event = self.transform_event(event)
-        if transformed_event:
-            self.route_event(event, transformed_event)
+    registry = CaliperTransformersRegistry
 
     def transform_event(self, event):
         """
@@ -58,27 +37,11 @@ class CaliperBackend:
         Raises:
             Any Exception
         """
-        event_name = event.get('name')
-        logger.info('Going to transform event "%s" into Caliper format', event_name)
+        transformed_event = super(CaliperBackend, self).transform_event(event)
 
-        try:
-            transformed_event = CaliperTransformersRegistry.get_transformer(event).transform()
+        if transformed_event:
+            caliper_logger.info(json.dumps(transformed_event))
 
-        except NoTransformerImplemented:
-            logger.error('Could not get transformer for %s event.', event.get('name'))
-            return None
-
-        except Exception as ex:
-            logger.exception(
-                'There was an error while trying to transform event "%s" into'
-                ' Caliper format. Error: %s', event_name, ex)
-            raise
-
-        logger.info(
-            'Successfully transformed event "%s" into Caliper format',
-            event_name
-        )
-        caliper_logger.info(json.dumps(transformed_event))
         return transformed_event
 
     def route_event(self, original_event, transformed_event):

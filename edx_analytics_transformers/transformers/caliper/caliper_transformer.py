@@ -13,7 +13,7 @@ from edx_analytics_transformers.transformers.caliper.constants import CALIPER_EV
 from edx_analytics_transformers.transformers.caliper.helpers import convert_datetime_to_iso
 
 
-logger = getLogger()
+logger = getLogger(__name__)
 User = get_user_model()
 
 
@@ -61,6 +61,7 @@ class CaliperTransformer(BaseTransformer):
             'type': 'Person'
         }
 
+    # TODO: use helper method
     def _generate_anonymous_id(self):
         """
         Generate anonymous user id.

@@ -27,7 +27,7 @@ class TestCaliperBackend(TestCase):
 
         self.backend = CaliperBackend(routers=self.routers)
 
-    @patch('edx_analytics_transformers.backends.caliper.logger')
+    @patch('edx_analytics_transformers.backends.base_transformer_backend.logger')
     def test_send_method_with_no_transformer_implemented(self, mocked_logger):
         self.backend.send(self.sample_event)
         mocked_logger.error.assert_called_once_with(
@@ -39,7 +39,7 @@ class TestCaliperBackend(TestCase):
         'edx_analytics_transformers.backends.caliper.CaliperTransformersRegistry.get_transformer',
         side_effect=ValueError
     )
-    @patch('edx_analytics_transformers.backends.caliper.logger')
+    @patch('edx_analytics_transformers.backends.base_transformer_backend.logger')
     def test_send_method_with_unknown_exception(self, mocked_logger, _):
         with self.assertRaises(ValueError):
             self.backend.send(self.sample_event)
