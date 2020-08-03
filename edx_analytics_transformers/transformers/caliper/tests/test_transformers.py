@@ -71,12 +71,3 @@ class TestTransformers(TestCase):
             actual_transformed_event.pop('id')
 
             self.assertDictEqual(expected_event, actual_transformed_event)
-
-    def test_duplicate_transformer_exception(self):
-        test_transformer = MagicMock()
-        CaliperTransformersRegistry.register('test_event')(test_transformer)
-
-        with self.assertRaises(TransformerAlreadyExitsts):
-            CaliperTransformersRegistry.register('test_event')(test_transformer)
-
-        CaliperTransformersRegistry.register('test_event', override_if_exists=True)(test_transformer)

@@ -33,7 +33,7 @@ class TransformerRegistry:
             raise AttributeError('Registry must has its own "mapping" class attribute.')
 
     @classmethod
-    def register(cls, event_key, override_if_exists=False):
+    def register(cls, event_key):
         """
         Decorator to register a transformer for an event
 
@@ -50,9 +50,6 @@ class TransformerRegistry:
                 transformer (class):    transformer class for one or more events.
             """
             if event_key in cls.mapping:
-                if not override_if_exists:
-                    raise TransformerAlreadyExitsts
-
                 logger.info(
                     'Overriding the existing transfromer {old_transformer} for event '
                     '{event_name} with {new_transformer}'.format(
@@ -80,7 +77,7 @@ class TransformerRegistry:
         """
         Return an initialized transformer instance for provided `event`.
 
-        Arguements:
+        Arguments:
             event (dict):   event to be transformed
 
         Returns:
