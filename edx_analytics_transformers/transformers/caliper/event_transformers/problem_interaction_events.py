@@ -50,62 +50,49 @@ class ProblemEventsTransformers(CaliperTransformer):
     https://docs.google.com/spreadsheets/u/1/d/1z_1IGFVDF-wZToKS2EGXFR3s0NXoh6tTKhEtDkevFEM/edit?usp=sharing.
     """
 
-    def get_type(self, current_event, _):
+    def get_type(self):
         """
         Return type for caliper event.
 
-        Arguments:
-            current_event (dict):   untransformed event
-            _             (dict):   transformed event
-
         Returns:
             str
         """
-        return EVENT_TYPE_MAP[current_event['name']]
+        return EVENT_TYPE_MAP[self.event['name']]
 
-    def get_action(self, current_event, _):
+    def get_action(self):
         """
         Return action for caliper event.
 
-        Arguments:
-            current_event (dict):   untransformed event
-            _             (dict):   transformed event
-
         Returns:
             str
         """
-        return EVENT_ACTION_MAP[current_event['name']]
+        return EVENT_ACTION_MAP[self.event['name']]
 
-    def get_object(self, current_event, transformed_event):
+    def get_object(self):
         """
         Return transformed object for caliper event.
-
-        Arguments:
-            current_event     (dict):   untransformed event
-            transformed_event (dict):   transformed event
 
         Returns:
             dict
         """
-        if 'problem_id' in current_event['data']:
-            object_id = current_event['data']['problem_id']
-        elif 'module_id' in current_event['data']:
-            object_id = current_event['data']['module_id']
-        else:
-            object_id = get_block_id_from_event_referrer(current_event) or current_event['context']['referer']
+        object_id = self.find_nested('problem_id')
+        if not object_id:
+            object_id = self.find_nested('module_id')
+        if not object_id:
+            object_id = get_block_id_from_event_referrer(self.event) or self.event['context']['referer']
 
-        caliper_object = transformed_event['object']
+        caliper_object = self.transformed_event['object']
         caliper_object.update({
             'id': object_id,
-            'type': OBJECT_TYPE_MAP[current_event['name']],
+            'type': OBJECT_TYPE_MAP[self.event['name']],
         })
 
-        if current_event['context'].get('event_source') == 'browser':
+        if self.event['context'].get('event_source') == 'browser':
             caliper_object['extensions'].update({
-                'data': current_event['data']
+                'data': self.event['data']
             })
         else:
-            caliper_object['extensions'].update(current_event['data'])
+            caliper_object['extensions'].update(self.event['data'])
             # problem_id is already being used as object id
             if 'problem_id' in caliper_object['extensions']:
                 del caliper_object['extensions']['problem_id']

@@ -12,8 +12,8 @@ isodate==0.6.0            # via -r requirements/base.in
 jsonfield2==4.0.0.post0   # via -r requirements/base.in
 newrelic==5.14.1.144      # via edx-django-utils
 psutil==1.2.1             # via edx-django-utils
-pymongo==3.10.1           # via -r requirements/base.in
+pymongo==3.11.0           # via -r requirements/base.in
 python-dateutil==2.8.1    # via -r requirements/base.in
 pytz==2020.1              # via -r requirements/base.in, django
-six==1.15.0               # via -r requirements/base.in, isodate, python-dateutil
+six==1.15.0               # via isodate, python-dateutil
 sqlparse==0.3.1           # via django

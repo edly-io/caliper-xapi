@@ -22,35 +22,28 @@ class EnrollmentEventTransformers(CaliperTransformer):
 
     type = 'Event'
 
-    def get_action(self, current_event, _):
+    def get_action(self):
         """
         Return action for caliper event.
-
-        Arguments:
-            current_event (dict):   untransformed event
-            _             (dict):   transformed event
 
         Returns:
             str
         """
-        if current_event['name'] == 'edx.course.enrollment.activated':
+        if self.event['name'] == 'edx.course.enrollment.activated':
             return 'Activated'
         return 'Deactivated'
 
-    def get_object(self, current_event, _):
+    def get_object(self):
         """
         Return transformed object for caliper event.
-
-        Arguments:
-            current_event (dict):   untransformed event
-            _             (dict):   transformed event
 
         Returns:
             dict
         """
-        data = current_event['data'].copy()
+        data = self.event['data'].copy()
         data.pop('user_id')
 
+        # TODO: replace with anonymous enrollment id?
         course_root_url = '{root_url}{course_root}'.format(
             root_url=settings.LMS_ROOT_URL,
             course_root=reverse('course_root', kwargs={'course_id': data['course_id']})

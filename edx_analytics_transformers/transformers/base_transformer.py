@@ -4,8 +4,6 @@ Base transformer to add or transform common data values.
 import json
 from logging import getLogger
 
-import six
-
 
 logger = getLogger(__name__)
 
@@ -33,8 +31,39 @@ class BaseTransformer:
         """
         Update the current event's `data` value with JSON decoded dict if its a string.
         """
-        if isinstance(self.event['data'], six.string_types):
+        if isinstance(self.event['data'], str):
             self.event['data'] = json.loads(self.event['data'])
+
+    def find_nested(self, key):
+        """
+        Find a key at all levels in the `event_dict` dictionary.
+
+        Arguments:
+            key (str)         :  dictionary key
+
+        Returns:
+            ANY
+        """
+        def _find_nested(event_dict):
+            """
+            Inner recursive method to find the key in dict.
+
+            Arguments:
+                event_dict (dict) :  event dictionary object
+
+            Returns:
+                ANY
+            """
+            if key in event_dict:
+                return event_dict[key]
+            for _, value in event_dict.items():
+                if isinstance(value, dict):
+                    found = _find_nested(value)
+                    if found:
+                        return found
+            return None
+
+        return _find_nested(self.event)
 
     def transform(self):
         """
@@ -49,7 +78,7 @@ class BaseTransformer:
                 value = getattr(self, key)
                 self.transformed_event[key] = value
             elif hasattr(self, 'get_{}'.format(key)):
-                value = getattr(self, 'get_{}'.format(key))(self.event, self.transformed_event)
+                value = getattr(self, 'get_{}'.format(key))()
                 self.transformed_event[key] = value
             else:
                 raise ValueError(

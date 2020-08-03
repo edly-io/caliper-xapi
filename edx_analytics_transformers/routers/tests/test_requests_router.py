@@ -7,7 +7,7 @@ from mock import MagicMock, call, patch, sentinel
 from eventtracking.processors.exceptions import EventEmissionExit
 
 from edx_analytics_transformers.routers.requests_router import RequestsRouter
-from edx_analytics_transformers.django.tests.factories import RouterConfigurationsFactory
+from edx_analytics_transformers.django.tests.factories import RouterConfigurationFactory
 
 
 ROUTER_CONFIG_FIXTURE = [
@@ -121,7 +121,7 @@ class TestRequestsRouter(TestCase):
     @patch('edx_analytics_transformers.utils.http_client.requests.post')
     @patch('edx_analytics_transformers.routers.requests_router.logger')
     def test_with_no_available_hosts(self, mocked_logger, mocked_post):
-        RouterConfigurationsFactory.create(
+        RouterConfigurationFactory.create(
             backend_name='test_backend',
             is_enabled=True,
             configurations=ROUTER_CONFIG_FIXTURE[1:1]
@@ -151,7 +151,7 @@ class TestRequestsRouter(TestCase):
             )
             return headers
 
-        RouterConfigurationsFactory.create(
+        RouterConfigurationFactory.create(
             backend_name='test_routing',
             is_enabled=True,
             configurations=ROUTER_CONFIG_FIXTURE

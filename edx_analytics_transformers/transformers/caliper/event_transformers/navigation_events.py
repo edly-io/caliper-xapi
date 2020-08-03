@@ -22,21 +22,17 @@ class NavigationEventsTransformers(CaliperTransformer):
     action = 'NavigatedTo'
     type = 'NavigationEvent'
 
-    def get_object(self, current_event, caliper_event):
+    def get_object(self):
         """
         Return transformed object for caliper event.
-
-        Arguments:
-            current_event (dict):   untransformed event
-            caliper_event (dict):   transformed event
 
         Returns:
             dict
         """
-        caliper_object = caliper_event['object']
-        data = current_event['data']
+        caliper_object = self.transformed_event['object']
+        data = self.event['data'].copy()
 
-        object_id = data.pop('target_url') if current_event['name'] == 'edx.ui.lms.link_clicked' else data.pop('id')
+        object_id = data.pop('target_url') if self.event['name'] == 'edx.ui.lms.link_clicked' else data.pop('id')
 
         caliper_object.update({
             'id': object_id,

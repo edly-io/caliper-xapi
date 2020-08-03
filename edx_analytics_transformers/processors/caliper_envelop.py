@@ -6,7 +6,7 @@ from datetime import datetime
 from pytz import UTC
 
 from edx_analytics_transformers.transformers.caliper.constants import CALIPER_EVENT_CONTEXT
-from edx_analytics_transformers.transformers.caliper.helpers import convert_datetime
+from edx_analytics_transformers.transformers.caliper.helpers import convert_datetime_to_iso
 
 
 class CaliperEnvelopProcessor:
@@ -28,7 +28,7 @@ class CaliperEnvelopProcessor:
         """
         return {
             'sensor': self.sensor_id,
-            'sendTime': convert_datetime(datetime.now(UTC)),
+            'sendTime': convert_datetime_to_iso(datetime.now(UTC)),
             'data': event,
             'dataVersion': CALIPER_EVENT_CONTEXT
         }

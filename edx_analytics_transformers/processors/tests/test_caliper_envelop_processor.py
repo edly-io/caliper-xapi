@@ -8,7 +8,7 @@ from mock import patch, sentinel
 from pytz import UTC
 
 from edx_analytics_transformers.processors.caliper_envelop import CaliperEnvelopProcessor
-from edx_analytics_transformers.transformers.caliper.helpers import convert_datetime
+from edx_analytics_transformers.transformers.caliper.helpers import convert_datetime_to_iso
 from edx_analytics_transformers.transformers.caliper.constants import CALIPER_EVENT_CONTEXT
 
 
@@ -34,7 +34,7 @@ class TestCaliperEnvelopProcessor(TestCase):
         result = CaliperEnvelopProcessor(sensor_id=self.sensor_id)(self.sample_event)
         self.assertEqual(result, {
             'sensor': self.sensor_id,
-            'sendTime': convert_datetime(str(FROZEN_TIME)),
+            'sendTime': convert_datetime_to_iso(str(FROZEN_TIME)),
             'data': self.sample_event,
             'dataVersion': CALIPER_EVENT_CONTEXT
         })

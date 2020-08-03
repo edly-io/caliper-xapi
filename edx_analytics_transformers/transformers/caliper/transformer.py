@@ -10,7 +10,7 @@ from student.models import anonymous_id_for_user    # pylint: disable=import-err
 
 from edx_analytics_transformers.transformers.base_transformer import BaseTransformer
 from edx_analytics_transformers.transformers.caliper.constants import CALIPER_EVENT_CONTEXT
-from edx_analytics_transformers.transformers.caliper.helpers import convert_datetime
+from edx_analytics_transformers.transformers.caliper.helpers import convert_datetime_to_iso
 
 
 logger = getLogger()
@@ -54,7 +54,7 @@ class CaliperTransformer(BaseTransformer):
         self.transformed_event.update({
             '@context': CALIPER_EVENT_CONTEXT,
             'id': uuid.uuid4().urn,
-            'eventTime': convert_datetime(self.event.get('timestamp'))
+            'eventTime': convert_datetime_to_iso(self.event.get('timestamp'))
         })
         self.transformed_event['object'] = {
             'extensions': {

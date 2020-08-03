@@ -3,8 +3,10 @@ Helper methods to be used by caliper utilities.
 """
 import logging
 from urllib.parse import parse_qs, urlparse
+from datetime import timedelta
 
 from dateutil.parser import parse
+from isodate import duration_isoformat
 
 
 logger = logging.getLogger(__name__)
@@ -12,7 +14,22 @@ logger = logging.getLogger(__name__)
 UTC_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 
 
-def convert_datetime(current_datetime):
+def convert_seconds_to_iso(seconds):
+    """
+    Convert seconds from integer to ISO format.
+
+    Arguments:
+        seconds (int): number of seconds
+
+    Returns:
+        str
+    """
+    return duration_isoformat(timedelta(
+        seconds=seconds
+    ))
+
+
+def convert_datetime_to_iso(current_datetime):
     """
     Convert provided datetime into UTC format.
 

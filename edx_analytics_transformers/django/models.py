@@ -6,7 +6,6 @@ import logging
 from django.db import models
 from model_utils.models import TimeStampedModel
 from jsonfield.fields import JSONField
-from six import iteritems
 
 from edx_django_utils.cache import TieredCache, get_cache_key
 
@@ -49,7 +48,7 @@ def get_value_from_dotted_path(dict_obj, dotted_key):
     return result
 
 
-class RouterConfigurations(TimeStampedModel):
+class RouterConfiguration(TimeStampedModel):
     """
     Configurations for filtering and then routing events to hosts.
     """
@@ -97,7 +96,7 @@ class RouterConfigurations(TimeStampedModel):
             backend_name (str):    Name of the backend for which the filter is required.
 
         Returns:
-            RouterConfigurations or None
+            RouterConfiguration or None
         """
         return cls._get_latest_cached_router(backend_name=backend_name)
 
@@ -114,7 +113,7 @@ class RouterConfigurations(TimeStampedModel):
             backend_name (str):    Name of the backend for which the router is required.
 
         Returns:
-            RouterConfigurations` or None
+            RouterConfiguration` or None
         """
         router_cache_key = get_cache_key(namespace=ROUTER_CACHE_NAMESPACE, backend_name=backend_name)
         cache_response = TieredCache.get_cached_response(router_cache_key)
@@ -142,7 +141,7 @@ class RouterConfigurations(TimeStampedModel):
             backend_name (str):    Name of the backend for which the filter is required.
 
         Returns:
-            RouterConfigurations or None
+            RouterConfiguration or None
         """
         queryset = cls.objects.filter(backend_name=backend_name, is_enabled=True)
 
@@ -178,7 +177,7 @@ class RouterConfigurations(TimeStampedModel):
         Returns:
             bool
         """
-        for key, value in iteritems(host_config['match_params']):
+        for key, value in host_config['match_params'].items():
             if get_value_from_dotted_path(original_event, key) != value:
                 return False
         return True
