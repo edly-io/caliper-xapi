@@ -1,5 +1,5 @@
 """
-Test the CaliperEnvelopProcessor
+Test the CaliperEnvelopProcessor.
 """
 from datetime import datetime
 from unittest import TestCase
@@ -17,7 +17,7 @@ FROZEN_TIME = datetime(2013, 10, 3, 8, 24, 55, tzinfo=UTC)
 
 class TestCaliperEnvelopProcessor(TestCase):
     """
-    Test the Caliper Envelop processor
+    Test the CaliperEnvelopProcessor.
     """
 
     def setUp(self):

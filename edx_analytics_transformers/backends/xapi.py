@@ -1,6 +1,5 @@
 """
-xAPI event processing backend
-"""
+XAPI backend for transforming and routing events."""
 from logging import getLogger
 
 
@@ -9,8 +8,7 @@ logger = getLogger(__name__)
 
 class XApiBackend:
     """
-    Backend to transform events into xAPI compliant format
-    and then route those events to configured endpoints.
+    XAPI backend for transforming and routing events.
     """
     def __init__(self, *args, **kwargs):
         pass

@@ -3,10 +3,7 @@ Registry to keep track of event transformers
 """
 from logging import getLogger
 
-from edx_analytics_transformers.transformers.exceptions import (
-    NoTransformerImplemented,
-    TransformerAlreadyExitsts
-)
+from edx_analytics_transformers.transformers.exceptions import NoTransformerImplemented
 
 
 logger = getLogger(__name__)
@@ -30,12 +27,16 @@ class TransformerRegistry:
             AttributeError
         """
         if 'mapping' not in cls.__dict__:
-            raise AttributeError('Registry must has its own "mapping" class attribute.')
+            raise AttributeError(
+                '{} registry must has its own "mapping" class attribute.'.format(
+                    cls.__name__
+                )
+            )
 
     @classmethod
     def register(cls, event_key):
         """
-        Decorator to register a transformer for an event
+        Decorator to register a transformer for an event.
 
         Arguments:
             event_key (str):    unique event identifier string.
@@ -75,7 +76,7 @@ class TransformerRegistry:
     @classmethod
     def get_transformer(cls, event):
         """
-        Return an initialized transformer instance for provided `event`.
+        Return an initialized transformer instance for the provided `event`.
 
         Arguments:
             event (dict):   event to be transformed

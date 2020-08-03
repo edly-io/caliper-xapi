@@ -113,7 +113,7 @@ class RouterConfiguration(TimeStampedModel):
             backend_name (str):    Name of the backend for which the router is required.
 
         Returns:
-            RouterConfiguration` or None
+            RouterConfiguration or None
         """
         router_cache_key = get_cache_key(namespace=ROUTER_CACHE_NAMESPACE, backend_name=backend_name)
         cache_response = TieredCache.get_cached_response(router_cache_key)

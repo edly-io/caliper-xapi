@@ -1,5 +1,5 @@
 """
-Helper methods to be used by caliper utilities.
+Helper utilities for event transformers.
 """
 import logging
 from urllib.parse import parse_qs, urlparse
@@ -60,7 +60,7 @@ def get_block_id_from_event_referrer(event):
         event (dict):   event dictionary object.
 
     Returns:
-        str or `None`
+        str or None
     """
     try:
         parsed = urlparse(event['context']['referer'])

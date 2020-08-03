@@ -1,5 +1,5 @@
 """
-Contains all available transformers
+Contains all available caliper transformers
 """
 from edx_analytics_transformers.transformers.caliper.event_transformers.problem_interaction_events import (
     ProblemEventsTransformers

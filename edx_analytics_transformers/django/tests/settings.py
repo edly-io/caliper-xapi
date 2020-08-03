@@ -28,3 +28,5 @@ INSTALLED_APPS = [
 SECRET_KEY = "test_key"
 
 LMS_ROOT_URL = 'http://localhost:18000'
+
+RUNNING_TESTS = True

@@ -1,0 +1,1 @@
+default_app_config = 'edx_analytics_transformers.django.apps.EdxAnalyticsTransformersConfig'

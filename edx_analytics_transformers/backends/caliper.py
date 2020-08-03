@@ -1,5 +1,5 @@
 """
-Caliper event processing backend
+Caliper backend for transforming and routing events.
 """
 import json
 from logging import getLogger
@@ -13,8 +13,12 @@ logger = getLogger(__name__)
 
 class CaliperBackend:
     """
-    Backend to transform events into xAPI compliant format
-    and then route those events to configured endpoints.
+    Caliper backend for transforming and routing events.
+
+    This backend first transform the event using the registered transformer
+    and then route the events through the configured routers.
+
+    Every router configured to be used MUST support the transfromed event type.
     """
 
     def __init__(self, routers={}):     # pylint: disable=dangerous-default-value
@@ -79,6 +83,8 @@ class CaliperBackend:
     def route_event(self, original_event, transformed_event):
         """
         Router the event through the configured routers.
+
+        Every router configured to be used MUST support the transfromed event type.
 
         Arguments:
             event (dict):   Event to be delivered.

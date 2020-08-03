@@ -5,12 +5,11 @@ import json
 import os
 
 import ddt
-from mock import MagicMock, patch
+from mock import patch
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from edx_analytics_transformers.transformers.exceptions import TransformerAlreadyExitsts
 from edx_analytics_transformers.django.tests.factories import UserFactory
 from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 

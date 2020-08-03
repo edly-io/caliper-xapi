@@ -43,7 +43,6 @@ EVENT_TYPE_MAP = {
 class ProblemEventsTransformers(CaliperTransformer):
     """
     Transform problem interaction related events into caliper format.
-    This transformer can transform the following events:
 
     Currently there is no "edx.problem.completed" event in open edx but
     will be added in future as per the mapping document:

@@ -14,7 +14,7 @@ from edx_analytics_transformers.django.models import RouterConfiguration
 @ddt.ddt
 class TestRouterConfiguration(TestCase):
     """
-    Test RouterConfiguration model
+    Test `RouterConfiguration` model
     """
 
     def setUp(self):

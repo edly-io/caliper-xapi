@@ -1,5 +1,5 @@
 """
-Base transformer to add or transform common data values.
+Base transformer to transform common event fields.
 """
 import uuid
 from logging import getLogger
@@ -20,8 +20,6 @@ User = get_user_model()
 class CaliperTransformer(BaseTransformer):
     """
     Base transformer class to transform common fields.
-
-    Other transformers are inherited from this class.
     """
     required_fields = (
         'type',

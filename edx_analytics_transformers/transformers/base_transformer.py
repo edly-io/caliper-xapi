@@ -22,7 +22,7 @@ class BaseTransformer:
         Initialize the transformer with the event to be transformed.
 
         Arguments:
-            event (dict):   event to be transformed
+            event (dict)    :   event to be transformed
         """
         self.event = event.copy()
         self.transformed_event = {}

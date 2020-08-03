@@ -1,5 +1,5 @@
 """
-New AppConfig for Django 1.8
+AppConfig class for the django app.
 """
 from __future__ import absolute_import
 from django.apps import AppConfig
@@ -7,7 +7,7 @@ from django.apps import AppConfig
 
 class EdxAnalyticsTransformersConfig(AppConfig):
     """
-    AppConfig class for the app.
+    AppConfig class for the django app.
     """
 
     name = 'edx_analytics_transformers.django'

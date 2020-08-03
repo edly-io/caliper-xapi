@@ -9,12 +9,11 @@ NOTE: Currently Open edX only emits legacy events for video interaction i.e.
 - pause_video
 - seek_video
 
-These event names are to be changed following the new event name format.
 Currently, mobile apps emits these events using the new names but will be
 added in edx-platform too. Therefore, we are adding support for legacy event names
 as well as new names.
 
-These events:
+The (soon to be) updated event names are as following:
 - edx.video.loaded
 - edx.video.played
 - edx.video.stopped
@@ -33,11 +32,22 @@ from edx_analytics_transformers.transformers.caliper.registry import CaliperTran
 
 EVENTS_ACTION_MAP = {
     'load_video': 'Retrieved',
+    'edx.video.loaded': 'Retrieved',
+
     'play_video': 'Started',
+    'edx.video.played': 'Started',
+
     'stop_video': 'Ended',
+    'edx.video.stopped': 'Ended',
+
     'complete_video': 'Ended',
+    'edx.video.completed': 'Ended',
+
     'pause_video': 'Paused',
+    'edx.video.paused': 'Paused',
+
     'seek_video': 'JumpedTo',
+    'edx.video.position.changed': 'JumpedTo',
 }
 
 
