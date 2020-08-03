@@ -1,34 +1,42 @@
 """
 A generic HTTP Client.
 """
+from logging import getLogger
+
 import requests
+
+
+logger = getLogger(__name__)
 
 
 class HttpClient:
     """
     A generic HTTP Client.
     """
-    def __init__(self, host='', auth_scheme='', api_key='', headers=None):
+    def __init__(self, url='', auth_scheme='', auth_key='', headers=None):
         """
         Initialize the client with provided configurations.
 
-        host (str)        :     URL for the event consumer.
+        url (str)        :     URL for the event consumer.
         auth_scheme (str) :     Scheme used for authentication.
-        api_key (str)     :     API key used in the authorization header.
+        auth_key (str)    :     API key used in the authorization header.
         headers (str)     :     Any additional headers to be sent with event payload.
         """
-        self.HOST = host
+        self.URL = url
         self.AUTH_SCHEME = auth_scheme
-        self.API_KEY = api_key
+        self.AUTH_KEY = auth_key
         self.HEADERS = headers or {}
 
     def get_auth_header(self):
         """
         Generate auth headers depending upon the client configurations.
+
+        Returns:
+            dict
         """
         if self.AUTH_SCHEME:
             return {
-                'Authorization': '{} {}'.format(self.AUTH_SCHEME, self.API_KEY)
+                'Authorization': '{} {}'.format(self.AUTH_SCHEME, self.AUTH_KEY)
             }
         return {}
 
@@ -38,7 +46,11 @@ class HttpClient:
 
         Arguments:
             json (dict) :   event payload to send to host.
+
+        Returns:
+            requests.Response object
         """
         headers = self.HEADERS.copy()
         headers.update(self.get_auth_header())
-        return requests.post(self.HOST, json=json, headers=headers)
+        logger.info('Sending event json to %s', self.URL)
+        return requests.post(self.URL, json=json, headers=headers)

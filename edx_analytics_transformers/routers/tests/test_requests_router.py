@@ -6,46 +6,47 @@ from mock import MagicMock, call, patch, sentinel
 
 from eventtracking.processors.exceptions import EventEmissionExit
 
+from edx_analytics_transformers.utils.http_client import HttpClient
 from edx_analytics_transformers.routers.requests_router import RequestsRouter
 from edx_analytics_transformers.django.tests.factories import RouterConfigurationFactory
 
 
 ROUTER_CONFIG_FIXTURE = [
     {
+        'router_type': 'AUTH_HEADERS',
         'match_params': {
             'data.key': 'value'
         },
         'host_configurations': {
-            'URL': 'http://test1.com',
-            'HEADERS': {},
-            'AUTH_SCHEME': 'Bearer',
-            'API_KEY': 'test_key'
+            'url': 'http://test1.com',
+            'headers': {},
+            'auth_scheme': 'Bearer',
+            'auth_key': 'test_key'
         },
         'override_args': {
             'new_key': 'new_value'
         }
     },
     {
+        'router_type': 'OAUTH2',
         'match_params': {
             'non_existing.id.value': 'test'
         },
         'host_configurations': {
-            'URL': 'http://test2.com',
-            'HEADERS': {},
-            'AUTH_SCHEME': 'Bearer',
-            'API_KEY': 'test_key'
+            'url': 'http://test2.com',
+            'client_id': 'id',
+            'client_secret': 'secret'
         },
         'override_args': {}
     },
     {
+        'router_type': 'API_KEY',
         'match_params': {
             'event_type': 'edx.test.event'
         },
         'host_configurations': {
-            'URL': 'http://test3.com',
-            'HEADERS': {},
-            'AUTH_SCHEME': 'Bearer',
-            'API_KEY': 'test_key'
+            'url': 'http://test3.com',
+            'api_key': 'test_key'
         }
     },
 ]
@@ -142,14 +143,14 @@ class TestRequestsRouter(TestCase):
 
     @patch('edx_analytics_transformers.utils.http_client.requests.post')
     def test_successful_routing_of_event(self, mocked_post):
+        mocked_oauth_client = MagicMock()
+        mocked_api_key_client = MagicMock()
 
-        def _make_headers(host_config):
-            headers = host_config['HEADERS']
-            headers['Authorization'] = '{} {}'.format(
-                host_config['AUTH_SCHEME'],
-                host_config['API_KEY']
-            )
-            return headers
+        MOCKED_MAP = {
+            'AUTH_HEADERS': HttpClient,
+            'OAUTH2': mocked_oauth_client,
+            'API_KEY': mocked_api_key_client
+        }
 
         RouterConfigurationFactory.create(
             backend_name='test_routing',
@@ -158,33 +159,29 @@ class TestRequestsRouter(TestCase):
         )
 
         router = RequestsRouter(processors=[], backend_name='test_routing')
-        router.send(self.sample_event, self.transformed_event)
 
-        host_0_expected_event = self.transformed_event.copy()
-        host_0_expected_event['new_key'] = 'new_value'
+        with patch.dict('edx_analytics_transformers.routers.requests_router.ROUTER_STRATEGY_MAPPING', MOCKED_MAP):
+            router.send(self.sample_event, self.transformed_event)
 
-        headers = [
-            _make_headers(host['host_configurations']) for host in ROUTER_CONFIG_FIXTURE
-        ]
+        # test the HTTP client
+        overridden_event = self.transformed_event.copy()
+        overridden_event['new_key'] = 'new_value'
 
         mocked_post.assert_has_calls([
             call(
-                ROUTER_CONFIG_FIXTURE[0]['host_configurations']['URL'],
-                json=host_0_expected_event,
-                headers=headers[0]
-            ),
-            call(
-                ROUTER_CONFIG_FIXTURE[2]['host_configurations']['URL'],
-                json=self.transformed_event,
-                headers=headers[2]
+                ROUTER_CONFIG_FIXTURE[0]['host_configurations']['url'],
+                json=overridden_event,
+                headers={
+                    'Authorization': 'Bearer test_key'
+                }
             ),
         ])
 
-        self.assertNotIn(
-            call(
-                ROUTER_CONFIG_FIXTURE[1]['host_configurations']['URL'],
-                json=self.transformed_event,
-                headers=headers[1]
-            ),
-            mocked_post.mock_calls
-        )
+        # test mocked api key client
+        mocked_api_key_client.assert_has_calls([
+            call(**ROUTER_CONFIG_FIXTURE[2]['host_configurations']),
+            call().send(self.transformed_event)
+        ])
+
+        # test mocked oauth client
+        mocked_oauth_client.assert_not_called()

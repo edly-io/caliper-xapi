@@ -1,5 +1,5 @@
 """
-Signal handles for the eventtracking app.
+Signal handles for the edx_analytics_transformers app.
 """
 from logging import getLogger
 

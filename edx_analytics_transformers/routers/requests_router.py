@@ -12,6 +12,11 @@ from edx_analytics_transformers.django.models import RouterConfiguration
 logger = logging.getLogger(__name__)
 
 
+ROUTER_STRATEGY_MAPPING = {
+    'AUTH_HEADERS': HttpClient,
+}
+
+
 class RequestsRouter:
     """
     Router to send events to hosts using requests library.
@@ -76,18 +81,14 @@ class RequestsRouter:
             return
 
         for host in hosts:
-            try:
-                url = host['host_configurations']['URL']
+            updated_event = self.overwrite_event_data(processed_event, host)
 
-                updated_event = self.overwrite_event_data(processed_event, host)
-                self.dispatch_event(updated_event, host['host_configurations'])
-
-                logger.info('Event %s is sent successfully to %s.',
-                            original_event['name'],
-                            url)
-
-            except Exception:   # pylint: disable=broad-except
-                logger.error('Failed to send event %s to %s.', original_event['name'], url, exc_info=True)
+            self.dispatch_event(
+                original_event['name'],
+                updated_event,
+                host['router_type'],
+                host['host_configurations']
+            )
 
     def process_event(self, event):
         """
@@ -125,19 +126,40 @@ class RequestsRouter:
             logger.info('Overwriting event with values %s', host['override_args'])
         return event
 
-    def dispatch_event(self, event, host_config):
+    def dispatch_event(self, event_name, event, router_type, host_config):
         """
         Send event to configured host.
 
         Arguments:
+            event_name (str)    : name of the original event
             event (dict)        : event dictionary to be delivered.
+            router_type (str)   : decides the client to use for sending the event
             host_config (dict)  : contains configurations for the host.
         """
-        client = HttpClient(
-            host=host_config['URL'],
-            auth_scheme=host_config.get('AUTH_SCHEME'),
-            api_key=host_config.get('API_KEY'),
-            headers=host_config.get('HEADERS')
+        logger.info(
+            'Routing event "%s" for router type "%s"',
+            event_name,
+            router_type
         )
 
-        return client.send(event)
+        try:
+            client_class = ROUTER_STRATEGY_MAPPING[router_type]
+        except KeyError:
+            logger.error('Unsupported routing strategy detected: %s', router_type)
+            return
+
+        try:
+            client = client_class(**host_config)
+            client.send(event)
+            logger.info(
+                'Successfully dispatched event "%s" using client strategy "%s"',
+                event_name,
+                router_type
+            )
+
+        except Exception:   # pylint: disable=broad-except
+            logger.exception(
+                'Exception occured while trying to dispatch event "%s"',
+                event_name,
+                exc_info=True
+            )
