@@ -81,7 +81,11 @@ class RequestsRouter:
             return
 
         for host in hosts:
-            updated_event = self.overwrite_event_data(processed_event, host)
+            updated_event = self.overwrite_event_data(
+                original_event['name'],
+                processed_event,
+                host
+            )
 
             self.dispatch_event(
                 original_event['name'],
