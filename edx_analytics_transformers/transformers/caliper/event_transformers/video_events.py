@@ -26,7 +26,7 @@ from datetime import timedelta
 from isodate import duration_isoformat
 
 from edx_analytics_transformers.transformers.caliper.helpers import convert_seconds_to_iso
-from edx_analytics_transformers.transformers.caliper.transformer import CaliperTransformer
+from edx_analytics_transformers.transformers.caliper.caliper_transformer import CaliperTransformer
 from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
 

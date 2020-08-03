@@ -157,7 +157,7 @@ class TestRequestsRouter(TestCase):
             is_enabled=True,
             configurations=ROUTER_CONFIG_FIXTURE
         )
-        import pdb; pdb.set_trace()
+
         router = RequestsRouter(processors=[], backend_name='test_routing')
 
         with patch.dict('edx_analytics_transformers.routers.requests_router.ROUTER_STRATEGY_MAPPING', MOCKED_MAP):
