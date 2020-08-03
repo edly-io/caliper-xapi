@@ -14,6 +14,9 @@ class CaliperEnvelopProcessor:
     Envelope the caliper transformed event.
     """
     def __init__(self, sensor_id):
+        """
+        Initialize the processor.
+        """
         self.sensor_id = sensor_id
 
     def __call__(self, event):

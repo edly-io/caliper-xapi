@@ -1,5 +1,6 @@
 """
-XAPI backend for transforming and routing events."""
+XAPI backend for transforming and routing events.
+"""
 from logging import getLogger
 
 

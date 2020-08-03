@@ -87,22 +87,6 @@ class RouterConfiguration(TimeStampedModel):
     @classmethod
     def get_latest_enabled_router(cls, backend_name):
         """
-        Wrapper method for `_get_latest_cached_router`.
-
-        Return the last modified, enabled router for the backend matching the `backend_name`.
-        Return `None` if there is no filter matching the criteria.
-
-        Arguments:
-            backend_name (str):    Name of the backend for which the filter is required.
-
-        Returns:
-            RouterConfiguration or None
-        """
-        return cls._get_latest_cached_router(backend_name=backend_name)
-
-    @classmethod
-    def _get_latest_cached_router(cls, backend_name):
-        """
         Return the last modified, enabled router for the backend matching the `backend_name`.
 
         First look for the router in the cache and return its value from there if found.
