@@ -17,20 +17,36 @@ class XApiTransformer(BaseTransformer):
     )
 
     def transform(self):
+        """
+        Return transformed `Statement` object.
+
+        `BaseTransformer`'s `transform` method will return dict containing
+        xAPI objects in transformed fields. Here we return a `Statement` object
+        constructed using those fields.
+
+        Returns:
+            `Statement`
+        """
         transformed_props = super(XApiTransformer, self).transform()
-        # TODO: initialize statement
         return Statement(**transformed_props)
 
     def base_transform(self):
+        """
+        Transform the fields that are common for all events.
+        """
+        # TODO: Move context registration in base transform
         self.transformed_event = {
             'actor': self.get_actor(),
-            # 'verb': self.get_verb(),
-            # 'object': self.get_object(),
-            # 'result': self.get_result(),
             'timestamp': self.get_timestamp()
         }
 
     def get_actor(self):
+        """
+        Return `Agent` object for the event.
+
+        Returns:
+            `Agent`
+        """
         return Agent(
             # name=get_anonymous_user_id_by_username(self.event['context'].get('username')),
             openid=get_anonymous_user_id_by_username(self.event['context'].get('username')),
@@ -39,5 +55,8 @@ class XApiTransformer(BaseTransformer):
     def get_timestamp(self):
         """
         Get the Timestamp for the statement.
+
+        Returns:
+            str
         """
         return self.event['timestamp']

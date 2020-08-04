@@ -1,0 +1,29 @@
+{
+    "actor": {
+        "objectType": "Agent",
+        "openid": "anonymous_id"
+    },
+    "context": {
+        "extensions": {
+            "http://id.tincanapi.com/extension/referrer": "http://localhost:18000/courses/course-v1:edX+DemoX+Demo_Course/about"
+        }
+    },
+    "object": {
+        "definition": {
+            "name": {
+                "en": "Demonstration Course"
+            },
+            "type": "http://adlnet.gov/expapi/activities/course"
+        },
+        "id": "http://localhost:18000/courses/course-v1:edX+DemoX+Demo_Course/",
+        "objectType": "Activity"
+    },
+    "timestamp": "2020-08-04T13:59:31.701739+00:00",
+    "verb": {
+        "display": {
+            "en": "registered"
+        },
+        "id": "http://adlnet.gov/expapi/verbs/registered"
+    },
+    "version": "1.0.1"
+}

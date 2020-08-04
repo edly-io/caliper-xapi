@@ -48,7 +48,7 @@ TAB_EVENTS_VERB_MAP = {
 @XApiTransformersRegistry.register('edx.ui.lms.link_clicked')
 class LinkClickedTransformer(XApiTransformer):
     """
-    xAPI transformer for Navigation events.
+    xAPI transformer for event generated when user clicks a link.
     """
     additional_fields = ('context', )
 
@@ -58,6 +58,12 @@ class LinkClickedTransformer(XApiTransformer):
     )
 
     def get_object(self):
+        """
+        Get object for xAPI transformed event.
+
+        Returns:
+            `Activity`
+        """
         return Activity(
             id=self.event['data']['target_url'],
             definition=ActivityDefinition(
@@ -71,6 +77,12 @@ class LinkClickedTransformer(XApiTransformer):
         )
 
     def get_context(self):
+        """
+        Get context for xAPI transformed event.
+
+        Returns:
+            `Context`
+        """
         return Context(
             # FIXME: registration must be a UUID
             # registration=get_anonymous_user_id_by_username(
@@ -84,6 +96,12 @@ class LinkClickedTransformer(XApiTransformer):
         )
 
     def get_context_activities(self):
+        """
+        Get context activities for xAPI transformed event.
+
+        Returns:
+            `ContextActivities`
+        """
         parent_activities = [
             Activity(
                 id='{root_url}{course_root_url}'.format(
@@ -114,6 +132,12 @@ class OutlineSelectedTransformer(XApiTransformer):
     )
 
     def get_object(self):
+        """
+        Get object for xAPI transformed event.
+
+        Returns:
+            `Activity`
+        """
         return Activity(
             id=self.event['data']['target_url'],
             definition=ActivityDefinition(
@@ -123,6 +147,12 @@ class OutlineSelectedTransformer(XApiTransformer):
         )
 
     def get_context(self):
+        """
+        Get context for xAPI transformed event.
+
+        Returns:
+            `Context`
+        """
         return Context(
             # FIXME: registration must be a UUID
             # registration=get_anonymous_user_id_by_username(
@@ -145,6 +175,12 @@ class TabNavigationTransformer(XApiTransformer):
     additional_fields = ('context', )
 
     def get_verb(self):
+        """
+        Get verb for xAPI transformed event.
+
+        Returns:
+            `Verb`
+        """
         event_name = self.event['name']
         verb = TAB_EVENTS_VERB_MAP[event_name]
 
@@ -154,6 +190,12 @@ class TabNavigationTransformer(XApiTransformer):
         )
 
     def get_object(self):
+        """
+        Get object for xAPI transformed event.
+
+        Returns:
+            `Activity`
+        """
         if self.event['name'] == 'edx.ui.lms.sequence.tab_selected':
             position = self.event['data']['target_tab']
         else:
@@ -170,6 +212,12 @@ class TabNavigationTransformer(XApiTransformer):
         )
 
     def get_context(self):
+        """
+        Get context for xAPI transformed event.
+
+        Returns:
+            `Context`
+        """
         event_name = self.event['name']
         if event_name == 'edx.ui.lms.sequence.tab_selected':
             extensions = Extensions({
@@ -194,6 +242,12 @@ class TabNavigationTransformer(XApiTransformer):
         )
 
     def get_context_activities(self):
+        """
+        Get context activities for xAPI transformed event.
+
+        Returns:
+            `ContextActivities`
+        """
         parent_activities = [
             Activity(
                 id=self.event['data']['id'],

@@ -5,6 +5,8 @@ from logging import getLogger
 
 from django.contrib.auth import get_user_model
 
+from lms.djangoapps.courseware.courses import get_course_by_id
+from opaque_keys.edx.keys import CourseKey
 from student.models import anonymous_id_for_user    # pylint: disable=import-error
 
 
@@ -38,3 +40,18 @@ def get_anonymous_user_id_by_username(username, course_id=None):
         anonymous_id = anonymous_id_for_user(user, course_id)
 
     return anonymous_id
+
+
+def get_course_from_id(course_id):
+    """
+    Get Course object using the `course_id`
+
+    Arguments:
+        course_id (str) :   ID of the course
+
+    Returns:
+        `Course`
+    """
+    # TODO: Add caching
+    course_key = CourseKey.from_string(course_id)
+    return get_course_by_id(course_key)

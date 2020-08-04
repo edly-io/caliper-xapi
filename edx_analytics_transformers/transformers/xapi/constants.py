@@ -52,6 +52,8 @@ EN = 'en'
 # Display Names
 EXPERIENCED = 'experienced'
 INITIALIZED = 'initialized'
+REGISTERED = 'registered'
+UNREGISTERED = 'unregistered'
 
 # TODO: confirm these
 TERMINATED = 'terminated'
