@@ -45,8 +45,8 @@ class TestCaliperBackend(TestCase):
             self.backend.send(self.sample_event)
 
         mocked_logger.exception.assert_called_once_with(
-            'There was an error while trying to transform event "%s" into'
-            ' Caliper format. Error: %s', self.sample_event['name'], ANY
+            'There was an error while trying to transform event "%s" using %s backend.'
+            ' Error: %s', 'sentinel.name', 'CaliperBackend', ANY
         )
 
     @patch('edx_analytics_transformers.backends.caliper.CaliperTransformersRegistry.get_transformer')

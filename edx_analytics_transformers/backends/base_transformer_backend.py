@@ -69,7 +69,7 @@ class BaseTransformerBackend:
         except Exception as ex:
             logger.exception(
                 'There was an error while trying to transform event "%s" using'
-                ' %s backned. Error: %s', event_name, self.__class__.__name__, ex)
+                ' %s backend. Error: %s', event_name, self.__class__.__name__, ex)
             raise
 
         logger.info(
