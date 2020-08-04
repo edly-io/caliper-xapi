@@ -127,9 +127,7 @@ class RouterConfiguration(TimeStampedModel):
         Returns:
             RouterConfiguration or None
         """
-        queryset = cls.objects.filter(backend_name=backend_name, is_enabled=True)
-
-        return queryset.latest('modified') if queryset.exists() else None
+        return cls.objects.filter(backend_name=backend_name, is_enabled=True).order_by('modified').last()
 
     def get_allowed_hosts(self, original_event):
         """
