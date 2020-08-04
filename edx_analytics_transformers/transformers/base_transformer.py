@@ -27,7 +27,7 @@ class BaseTransformer:
         self.event = event.copy()
         self.transformed_event = {}
 
-    def json_load_event(self):
+    def jsonify_event_data(self):
         """
         Update the current event's `data` value with JSON decoded dict if its a string.
         """
@@ -36,7 +36,7 @@ class BaseTransformer:
 
     def find_nested(self, key):
         """
-        Find a key at all levels in the `event_dict` dictionary.
+        Find a key at all levels in the original event dictionary.
 
         Arguments:
             key (str)         :  dictionary key
@@ -72,6 +72,10 @@ class BaseTransformer:
         Returns:
             dict
         """
+        base_transform = getattr(self, 'base_transform', None)
+        if callable(base_transform):
+            self.base_transform()
+
         transforming_fields = self.required_fields + self.additional_fields
         for key in transforming_fields:
             if hasattr(self, key):

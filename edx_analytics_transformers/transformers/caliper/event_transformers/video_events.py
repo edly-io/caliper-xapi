@@ -94,7 +94,7 @@ class BaseVideoTransformer(CaliperTransformer):
         Returns:
             str
         """
-        self.json_load_event()
+        self.jsonify_event_data()
         caliper_object = self.transformed_event['object']
         event = self.event['data'].copy()
         course_id = self.find_nested('course_id')

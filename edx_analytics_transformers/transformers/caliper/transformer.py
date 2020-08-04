@@ -27,17 +27,7 @@ class CaliperTransformer(BaseTransformer):
         'action'
     )
 
-    def transform(self):
-        """
-        Transform the edX event into Caliper event.
-
-        Returns:
-            dict
-        """
-        self._base_transform()
-        return super(CaliperTransformer, self).transform()
-
-    def _base_transform(self):
+    def base_transform(self):
         """
         Transform common Caliper fields.
         """
