@@ -68,8 +68,8 @@ class BaseTransformerBackend:
 
         except Exception as ex:
             logger.exception(
-                'There was an error while trying to transform event "%s" into'
-                ' Caliper format. Error: %s', event_name, ex)
+                'There was an error while trying to transform event "%s" using'
+                ' %s backned. Error: %s', event_name, self.__class__.__name__, ex)
             raise
 
         logger.info(

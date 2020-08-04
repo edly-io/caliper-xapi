@@ -1,0 +1,40 @@
+{
+    "actor": {
+        "openid": "anonymous_id",
+        "objectType": "Agent"
+    },
+    "context": {
+        "contextActivities": {
+            "parent": [
+                {
+                    "id": "http://localhost:18000/courses/course-v1:edX+DemoX+Demo_Course/",
+                    "objectType": "Activity"
+                }
+            ]
+        },
+        "extensions": {
+            "http://id.tincanapi.com/extension/referrer": "http://localhost:18000/courses/course-v1:edX+DemoX+Demo_Course/course/"
+        }
+    },
+    "object": {
+        "definition": {
+            "extensions": {
+                "http://id.tincanapi.com/extension/position": "http://localhost:18000/courses/course-v1:edX+DemoX+Demo_Course/jump_to/block-v1:edX+DemoX+Demo_Course+type@sequential+block@48ecb924d7fe4b66a230137626bfa93e"
+            },
+            "name": {
+                "en": "Link name"
+            },
+            "type": "http://adlnet.gov/expapi/activities/link"
+        },
+        "id": "http://localhost:18000/courses/course-v1:edX+DemoX+Demo_Course/jump_to/block-v1:edX+DemoX+Demo_Course+type@sequential+block@48ecb924d7fe4b66a230137626bfa93e",
+        "objectType": "Activity"
+    },
+    "timestamp": "2020-08-04T12:13:08.251254+00:00",
+    "verb": {
+        "display": {
+            "en": "experienced"
+        },
+        "id": "http://adlnet.gov/expapi/verbs/experienced"
+    },
+    "version": "1.0.1"
+}

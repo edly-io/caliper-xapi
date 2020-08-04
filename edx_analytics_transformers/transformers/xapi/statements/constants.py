@@ -1,3 +1,0 @@
-"""
-Constants for xAPI specifications.
-"""

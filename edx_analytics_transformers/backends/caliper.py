@@ -43,16 +43,3 @@ class CaliperBackend(BaseTransformerBackend):
             caliper_logger.info(json.dumps(transformed_event))
 
         return transformed_event
-
-    def route_event(self, original_event, transformed_event):
-        """
-        Router the event through the configured routers.
-
-        Every router configured to be used MUST support the transfromed event type.
-
-        Arguments:
-            event (dict):   Event to be delivered.
-        """
-        for name, router in self.routers.items():
-            logger.info('Routing event to router %s', name)
-            router.send(original_event, transformed_event)

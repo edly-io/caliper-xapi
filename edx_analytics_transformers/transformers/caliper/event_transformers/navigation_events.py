@@ -29,10 +29,17 @@ class NavigationEventsTransformers(CaliperTransformer):
         Returns:
             dict
         """
+        self.jsonify_event_data()
         caliper_object = self.transformed_event['object']
         data = self.event['data'].copy()
-
-        object_id = data.pop('target_url') if self.event['name'] == 'edx.ui.lms.link_clicked' else data.pop('id')
+        if self.event['name'] in (
+            'edx.ui.lms.link_clicked',
+            'edx.ui.lms.sequence.outline.selected',
+            'edx.ui.lms.outline.selected',
+        ):
+            object_id = data.pop('target_url')
+        else:
+            object_id = data.pop('id')
 
         caliper_object.update({
             'id': object_id,

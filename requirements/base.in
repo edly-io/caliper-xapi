@@ -10,6 +10,6 @@ isodate
 django-model-utils
 edx-django-utils
 jsonfield2
-tincan
+edx-tincan-py35
 
 # TODO: Add eventtracking here

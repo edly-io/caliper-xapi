@@ -1,7 +1,6 @@
 """
 XAPI backend for transforming and routing events.
 """
-import json
 from logging import getLogger
 
 from edx_analytics_transformers.backends.base_transformer_backend import BaseTransformerBackend
@@ -20,14 +19,24 @@ class XApiBackend(BaseTransformerBackend):
     registry = XApiTransformersRegistry
 
     def transform_event(self, event):
+        """
+        Transform the event into IMS Caliper format.
+
+        Arguments:
+            event (dict):   Event to be transformed.
+
+        Returns:
+            dict:           transformed event
+
+        Raises:
+            Any Exception
+        """
+        logger.info('before transforming %s', event['name'])
+        import json
+        logger.info(json.dumps(event))
         transformed_event = super(XApiBackend, self).transform_event(event)
 
         if transformed_event:
-            xapi_logger.info(json.dumps(transformed_event))
+            xapi_logger.info(transformed_event.to_json())
 
         return transformed_event
-
-    # better
-    # def get_transformed_event(self, event):
-    #     # TODO: add a adapter method in statement class?
-    #     return self.registry.get_transformer(event)
