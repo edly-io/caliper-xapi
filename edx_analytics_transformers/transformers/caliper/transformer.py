@@ -91,3 +91,45 @@ class CaliperTransformer(BaseTransformer):
             'id': self.event['context'].get('referer'),
             'type': 'WebPage'
         }
+
+    def transform(self):
+        """
+        Transform the edX event.
+
+        Overriding this method to clean the event after successfull
+        transformation.
+        In some cases, `object[extensions]` in the transfromed event may have
+        some keys that already exist in the `object` field of transfromed event.
+        Here we delete such fields.
+
+        Returns:
+            dict
+        """
+        transformed_event = super(CaliperTransformer, self).transform()
+        self.clean_event(transformed_event, ('id', 'type'))
+        return transformed_event
+
+    def clean_event(self, event, ignored_fields=()):
+        """
+        Remove duplicated fields from event.
+
+        Remove the fields from the event object's extensions that
+        already exist in the object.
+
+        There are some fields that have different meaning in `object` than
+        the object extensions. e.g. for some video events, `object[id]` has
+        different meaning that `object[extensions][id]` hence we do not want
+        to delete the `id` key here. Such keys are passed in `ignored_fields`
+        parameter.
+
+        Arguments:
+            event (dict) :           transformed event
+            ignored_fields (tuple) : fields that should be ignored for cleaning
+        """
+        event_object = event.get('object', {})
+        for key in event_object.keys():
+            if (
+                key in event_object.get('extensions', {}) and
+                key not in ignored_fields
+            ):
+                del event_object['extensions'][key]

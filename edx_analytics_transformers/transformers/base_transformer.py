@@ -1,6 +1,7 @@
 """
 Base transformer to add or transform common data values.
 """
+from abc import abstractmethod
 import json
 from logging import getLogger
 
@@ -64,6 +65,12 @@ class BaseTransformer:
             return None
 
         return _find_nested(self.event)
+
+    @abstractmethod
+    def base_transform(self):
+        """
+        Transform the fields that are common for all events.
+        """
 
     def transform(self):
         """

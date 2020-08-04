@@ -112,21 +112,6 @@ class BaseVideoTransformer(CaliperTransformer):
 
         return caliper_object
 
-    def transform(self):
-        """
-        Override the base class transform method to clean unwanted
-        fields from the transformed event.
-
-        Arguments:
-
-        Returns:
-            dict
-        """
-        transformed_event = super().transform()
-        if 'duration' in transformed_event['object']['extensions']:
-            del transformed_event['object']['extensions']['duration']
-        return transformed_event
-
 
 @CaliperTransformersRegistry.register('load_video')
 @CaliperTransformersRegistry.register('edx.video.loaded')
