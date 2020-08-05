@@ -30,7 +30,7 @@ def mocked_course_reverse(_, kwargs):
     """
     Return the reverse method to return course root URL.
     """
-    return '/courses/{}'.format(kwargs.get('course_id'))
+    return '/courses/{}/'.format(kwargs.get('course_id'))
 
 
 class BaseTestTransformers(TestCase):
@@ -55,6 +55,10 @@ class TransformersTestsMixin:
     required_keys = ()
 
     @patch('edx_analytics_transformers.transformers.caliper.event_transformers.enrollment_events.reverse',
+           side_effect=mocked_course_reverse)
+    @patch('edx_analytics_transformers.transformers.xapi.transformers.navigation_events.reverse',
+           side_effect=mocked_course_reverse)
+    @patch('edx_analytics_transformers.transformers.xapi.transformers.enrollment_events.reverse',
            side_effect=mocked_course_reverse)
     def test_event_transformer(self, *_):
         supported_events = [

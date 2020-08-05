@@ -1,7 +1,7 @@
 """
 xAPI Transformer Class
 """
-from tincan import Activity, ActivityDefinition, Agent, LanguageMap, Statement, Context
+from tincan import Agent, Statement
 
 from edx_analytics_transformers.transformers.base_transformer import BaseTransformer
 from edx_analytics_transformers.transformers.helpers import get_anonymous_user_id_by_username

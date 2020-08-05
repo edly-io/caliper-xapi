@@ -5,9 +5,11 @@ from logging import getLogger
 
 from django.contrib.auth import get_user_model
 
+# Imported from edx-platform
+# pylint: disable=import-error
 from lms.djangoapps.courseware.courses import get_course_by_id
 from opaque_keys.edx.keys import CourseKey
-from student.models import anonymous_id_for_user    # pylint: disable=import-error
+from student.models import anonymous_id_for_user
 
 
 logger = getLogger(__name__)

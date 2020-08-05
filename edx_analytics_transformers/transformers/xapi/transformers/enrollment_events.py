@@ -9,13 +9,8 @@ from django.urls import reverse
 from tincan import (
     Activity,
     ActivityDefinition,
-    ActivityList,
-    Agent,
     Context,
     LanguageMap,
-    Statement,
-    Context,
-    ContextActivities,
     Verb,
     Extensions
 )
@@ -43,14 +38,15 @@ class BaseEnrollmentTransformer(XApiTransformer):
         Returns:
             `Activity`
         """
+        course_id = self.find_nested('course_id')
+
         object_id = '{root_url}{course_root_url}'.format(
                     root_url=settings.LMS_ROOT_URL,
                     course_root_url=reverse('course_root', kwargs={
-                        'course_id': self.event['context']['course_id']
+                        'course_id': course_id
                     })
         )
 
-        course_id = self.find_nested('course_id')
         course = get_course_from_id(course_id)
         display_name = course.display_name
 
@@ -90,7 +86,6 @@ class EnrollmentActivatedTransformer(BaseEnrollmentTransformer):
         id=constants.XAPI_VERB_REGISTERED,
         display=LanguageMap({constants.EN: constants.REGISTERED}),
     )
-
 
 
 @XApiTransformersRegistry.register('edx.course.enrollment.deactivated')

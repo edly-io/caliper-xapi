@@ -31,10 +31,6 @@ class XApiBackend(BaseTransformerBackend):
         Raises:
             Any Exception
         """
-        # FIXME: remove this
-        logger.info('before transforming %s', event['name'])
-        import json
-        logger.info(json.dumps(event))
         transformed_event = super(XApiBackend, self).transform_event(event)
 
         if transformed_event:

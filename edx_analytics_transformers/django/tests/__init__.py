@@ -18,8 +18,11 @@ def _mock_third_party_modules():
     sys.modules['student.models'] = student_module
 
     # mock courseware module
+    mocked_course = mock.MagicMock()
+    mocked_course.display_name = 'Demonstration Course'
+
     mocked_courses = mock.MagicMock()
-    mocked_courses.get_course_by_id.display_name.return_value = 'Demostration Course'
+    mocked_courses.get_course_by_id.return_value = mocked_course
     sys.modules['lms.djangoapps.courseware.courses'] = mocked_courses
 
     # mock opaque keys module

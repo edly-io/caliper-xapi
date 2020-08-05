@@ -1,6 +1,6 @@
 {
     "actor": {
-        "openid": "anonymous_id",
+        "openid": "anonymous",
         "objectType": "Agent"
     },
     "context": {

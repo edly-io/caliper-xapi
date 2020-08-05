@@ -1,7 +1,6 @@
 """
 Base backend for routing backends.
 """
-from abc import abstractmethod
 from logging import getLogger
 
 from edx_analytics_transformers.transformers.exceptions import NoTransformerImplemented
