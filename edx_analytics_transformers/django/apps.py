@@ -21,4 +21,4 @@ class EdxAnalyticsTransformersConfig(AppConfig):
         # pylint: disable=import-outside-toplevel, unused-import
         from edx_analytics_transformers import signals
         from edx_analytics_transformers.transformers.caliper import event_transformers
-        from edx_analytics_transformers.transformers.xapi import transformers
+        from edx_analytics_transformers.transformers.xapi import event_transformers

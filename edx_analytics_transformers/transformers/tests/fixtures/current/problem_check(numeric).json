@@ -1,0 +1,80 @@
+{
+    "context": {
+        "accept_language": "en-US,en;q=0.9",
+        "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36",
+        "asides": {},
+        "client_id": "667522224.1583394645",
+        "course_id": "course-v1:edX+DemoX+Demo_Course",
+        "course_user_tags": {},
+        "event_source": "server",
+        "host": "localhost:18000",
+        "ip": "172.18.0.1",
+        "module": {
+            "display_name": "Numerical Input",
+            "usage_key": "block-v1:edX+DemoX+Demo_Course+type@problem+block@5cd5d0110c964d2c8a4362afb57b4385"
+        },
+        "org_id": "edX",
+        "page": "x_module",
+        "path": "/courses/course-v1:edX+DemoX+Demo_Course/xblock/block-v1:edX+DemoX+Demo_Course+type@problem+block@5cd5d0110c964d2c8a4362afb57b4385/handler/xmodule_handler/problem_check",
+        "referer": "http://localhost:18000/courses/course-v1:edX+DemoX+Demo_Course/courseware/8b66dcd2d6134eda9355089ece4f39f6/ef37eb3cf1724e38b7f88a9ce85a4842/?activate_block_id=block-v1%3AedX%2BDemoX%2BDemo_Course%2Btype%40sequential%2Bblock%40ef37eb3cf1724e38b7f88a9ce85a4842",
+        "session": "a239c681a246b3c5d8b000d1c7249021",
+        "user_id": 3,
+        "username": "edx"
+    },
+    "data": {
+        "answers": {
+            "5cd5d0110c964d2c8a4362afb57b4385_2_1": "100"
+        },
+        "attempts": 2,
+        "correct_map": {
+            "5cd5d0110c964d2c8a4362afb57b4385_2_1": {
+                "answervariable": null,
+                "correctness": "correct",
+                "hint": "",
+                "hintmode": null,
+                "msg": "",
+                "npoints": null,
+                "queuestate": null
+            }
+        },
+        "grade": 1,
+        "max_grade": 1,
+        "problem_id": "block-v1:edX+DemoX+Demo_Course+type@problem+block@5cd5d0110c964d2c8a4362afb57b4385",
+        "state": {
+            "correct_map": {
+                "5cd5d0110c964d2c8a4362afb57b4385_2_1": {
+                    "answervariable": null,
+                    "correctness": "correct",
+                    "hint": "",
+                    "hintmode": null,
+                    "msg": "",
+                    "npoints": null,
+                    "queuestate": null
+                }
+            },
+            "done": true,
+            "has_saved_answers": false,
+            "input_state": {
+                "5cd5d0110c964d2c8a4362afb57b4385_2_1": {}
+            },
+            "seed": 1,
+            "student_answers": {
+                "5cd5d0110c964d2c8a4362afb57b4385_2_1": "100"
+            }
+        },
+        "submission": {
+            "5cd5d0110c964d2c8a4362afb57b4385_2_1": {
+                "answer": "100",
+                "correct": true,
+                "group_label": "",
+                "input_type": "formulaequationinput",
+                "question": "Add the question text, or prompt, here. This text is required.",
+                "response_type": "numericalresponse",
+                "variant": ""
+            }
+        },
+        "success": "correct"
+    },
+    "name": "problem_check",
+    "timestamp": "2020-08-05T14:11:13.006974+00:00"
+}

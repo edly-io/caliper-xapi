@@ -15,6 +15,7 @@ XAPI_VERB_EXPERIENCED = 'http://adlnet.gov/expapi/verbs/experienced'
 
 # TODO: confirm these
 XAPI_VERB_TERMINATED = 'http://adlnet.gov/expapi/verbs/terminated'
+XAPI_VERB_ASKED = 'http://adlnet.gov/expapi/verbs/asked'
 
 
 XAPI_VERB_INITIALIZED = 'http://adlnet.gov/expapi/verbs/initialized'
@@ -54,10 +55,13 @@ EXPERIENCED = 'experienced'
 INITIALIZED = 'initialized'
 REGISTERED = 'registered'
 UNREGISTERED = 'unregistered'
+ATTEMPTED = 'attempted'
+ANSWERED = 'answered'
+INTERACTED = 'interacted'
 
 # TODO: confirm these
 TERMINATED = 'terminated'
-
+ASKED = 'asked'
 
 # Open edX
 OPENEDX_OAUTH2_TOKEN_URL = '/oauth2/access_token'

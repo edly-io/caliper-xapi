@@ -31,6 +31,9 @@ class XApiBackend(BaseTransformerBackend):
         Raises:
             Any Exception
         """
+        import json
+        logger.info('before xapi transform')
+        logger.info(json.dumps(event))
         transformed_event = super(XApiBackend, self).transform_event(event)
 
         if transformed_event:

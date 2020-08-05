@@ -1,0 +1,43 @@
+{
+    "actor": {
+        "objectType": "Agent",
+        "openid": "anonymous_id"
+    },
+    "context": {
+        "contextActivities": {
+            "parent": [
+                {
+                    "id": "http://localhost:18000/courses/course-v1:edX+DemoX+Demo_Course/",
+                    "objectType": "Activity"
+                }
+            ]
+        }
+    },
+    "object": {
+        "definition": {
+            "correctResponsesPattern": ["100"],
+            "interactionType": "numeric",
+            "type": "http://adlnet.gov/expapi/activities/interaction"
+        },
+        "id": "block-v1:edX+DemoX+Demo_Course+type@problem+block@5cd5d0110c964d2c8a4362afb57b4385",
+        "objectType": "Activity"
+    },
+    "result": {
+        "response": "{'5cd5d0110c964d2c8a4362afb57b4385_2_1': '100'}",
+        "score": {
+            "max": 1,
+            "min": 0,
+            "raw": 1,
+            "scaled": 1
+        },
+        "success": true
+    },
+    "timestamp": "2020-08-05T14:11:13.006974+00:00",
+    "verb": {
+        "display": {
+            "en": "answered"
+        },
+        "id": "http://adlnet.gov/expapi/verbs/answered"
+    },
+    "version": "1.0.1"
+}

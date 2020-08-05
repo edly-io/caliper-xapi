@@ -19,12 +19,6 @@ User = get_user_model()
 
 TEST_DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
-EVENT_FIXTURE_FILENAMES = [
-    event_file_name for event_file_name in os.listdir(
-        '{}/fixtures/current/'.format(TEST_DIR_PATH)
-    ) if event_file_name.endswith(".json")
-]
-
 
 def mocked_course_reverse(_, kwargs):
     """
@@ -56,9 +50,11 @@ class TransformersTestsMixin:
 
     @patch('edx_analytics_transformers.transformers.caliper.event_transformers.enrollment_events.reverse',
            side_effect=mocked_course_reverse)
-    @patch('edx_analytics_transformers.transformers.xapi.transformers.navigation_events.reverse',
+    @patch('edx_analytics_transformers.transformers.xapi.event_transformers.navigation_events.reverse',
            side_effect=mocked_course_reverse)
-    @patch('edx_analytics_transformers.transformers.xapi.transformers.enrollment_events.reverse',
+    @patch('edx_analytics_transformers.transformers.xapi.event_transformers.enrollment_events.reverse',
+           side_effect=mocked_course_reverse)
+    @patch('edx_analytics_transformers.transformers.xapi.event_transformers.problem_interaction_events.reverse',
            side_effect=mocked_course_reverse)
     def test_event_transformer(self, *_):
         supported_events = [
