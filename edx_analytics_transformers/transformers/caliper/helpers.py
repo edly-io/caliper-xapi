@@ -1,5 +1,7 @@
 """
 Helper utilities for event transformers.
+
+# TODO: move to transformer utils
 """
 import logging
 from urllib.parse import parse_qs, urlparse
@@ -69,3 +71,24 @@ def get_block_id_from_event_referrer(event):
     except (KeyError, IndexError):
         logger.error('Could not get block id for event "%s"', event.get('name'))
         return None
+
+
+def make_video_block_id(video_id, course_id, video_block_name='video', block_version='block-v1'):
+    """
+    Return formatted video block id for provided video and course.
+
+    Arguments:
+        video_id        (str) : id for the video object
+        course_id       (str) : course key string
+        video_block_name(str) : video block prefix to generate video id
+        block_version   (str) : xBlock version
+
+    Returns:
+        str
+    """
+    return '{block_version}:{course_id}+type@{video_block_name}+block@{video_id}'.format(
+        block_version=block_version,
+        course_id=course_id,
+        video_block_name=video_block_name,
+        video_id=video_id
+    )

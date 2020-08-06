@@ -1,10 +1,11 @@
 """
 xAPI Transformer Class
 """
-from tincan import Agent, Statement
+from tincan import Agent, Statement, LanguageMap, Verb
 
 from edx_analytics_transformers.transformers.base_transformer import BaseTransformer
 from edx_analytics_transformers.transformers.helpers import get_anonymous_user_id_by_username
+from edx_analytics_transformers.transformers.xapi import constants
 
 
 class XApiTransformer(BaseTransformer):
@@ -60,3 +61,33 @@ class XApiTransformer(BaseTransformer):
             str
         """
         return self.event['timestamp']
+
+
+class XApiVerbTransformerMixin:
+    """
+    Return transformed Verb object using a predefined `verb_map`
+    in the transformer.
+
+    The `verb_map` dictionary must contain `id` and `display` (language "en")
+    for each verb value.
+
+    This is helpful in base transformer class which are going to be
+    transforming multiple transformers.
+    """
+    verb_map = None
+
+    def get_verb(self):
+        """
+        Get verb for xAPI transformed event.
+
+        Returns:
+            `Verb`
+        """
+        event_name = self.event['name']
+
+        verb = self.verb_map[event_name]
+
+        return Verb(
+            id=verb['id'],
+            display=LanguageMap({constants.EN: verb['display']})
+        )

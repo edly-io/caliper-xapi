@@ -25,7 +25,7 @@ from datetime import timedelta
 
 from isodate import duration_isoformat
 
-from edx_analytics_transformers.transformers.caliper.helpers import convert_seconds_to_iso
+from edx_analytics_transformers.transformers.caliper.helpers import convert_seconds_to_iso, make_video_block_id
 from edx_analytics_transformers.transformers.caliper.caliper_transformer import CaliperTransformer
 from edx_analytics_transformers.transformers.caliper.registry import CaliperTransformersRegistry
 
@@ -49,27 +49,6 @@ EVENTS_ACTION_MAP = {
     'seek_video': 'JumpedTo',
     'edx.video.position.changed': 'JumpedTo',
 }
-
-
-def make_video_block_id(video_id, course_id, video_block_name='video', block_version='block-v1'):
-    """
-    Return formatted video block id for provided video and course.
-
-    Arguments:
-        video_id        (str) : id for the video object
-        course_id       (str) : course key string
-        video_block_name(str) : video block prefix to generate video id
-        block_version   (str) : xBlock version
-
-    Returns:
-        str
-    """
-    return '{block_version}:{course_id}+type@{video_block_name}+block@{video_id}'.format(
-        block_version=block_version,
-        course_id=course_id,
-        video_block_name=video_block_name,
-        video_id=video_id
-    )
 
 
 class BaseVideoTransformer(CaliperTransformer):

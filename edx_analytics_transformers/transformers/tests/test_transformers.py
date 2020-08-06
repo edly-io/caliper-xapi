@@ -56,6 +56,8 @@ class TransformersTestsMixin:
            side_effect=mocked_course_reverse)
     @patch('edx_analytics_transformers.transformers.xapi.event_transformers.problem_interaction_events.reverse',
            side_effect=mocked_course_reverse)
+    @patch('edx_analytics_transformers.transformers.xapi.event_transformers.video_events.reverse',
+           side_effect=mocked_course_reverse)
     def test_event_transformer(self, *_):
         supported_events = [
             event_file_name for event_file_name in os.listdir(

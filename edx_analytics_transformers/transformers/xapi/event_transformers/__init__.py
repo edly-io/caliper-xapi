@@ -18,3 +18,10 @@ from edx_analytics_transformers.transformers.xapi.event_transformers.problem_int
     ProblemEventsTransformer,
     ProblemSubmittedTransformer
 )
+
+from edx_analytics_transformers.transformers.xapi.event_transformers.video_events import (
+    VideoCompletedTransformer,
+    VideoInteractionTransformers,
+    VideoLoadedTransformer,
+    VideoPositionChangedTransformer
+)

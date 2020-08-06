@@ -13,20 +13,22 @@ from tincan import (
     LanguageMap,
     Context,
     ContextActivities,
-    Verb,
     Extensions
 )
 
 # from edx_analytics_transformers.transformers.helpers import get_anonymous_user_id_by_username
 from edx_analytics_transformers.transformers.xapi import constants
 from edx_analytics_transformers.transformers.xapi.registry import XApiTransformersRegistry
-from edx_analytics_transformers.transformers.xapi.transformer import XApiTransformer
+from edx_analytics_transformers.transformers.xapi.transformer import (
+    XApiTransformer,
+    XApiVerbTransformerMixin
+)
 
 
 logger = getLogger(__name__)
 
 
-TAB_EVENTS_VERB_MAP = {
+VERB_MAP = {
     'edx.ui.lms.sequence.next_selected': {
         'id': constants.XAPI_VERB_TERMINATED,
         'display': constants.TERMINATED
@@ -38,21 +40,37 @@ TAB_EVENTS_VERB_MAP = {
     'edx.ui.lms.sequence.tab_selected': {
         'id': constants.XAPI_VERB_INITIALIZED,
         'display': constants.INITIALIZED
+    },
+    'edx.ui.lms.link_clicked': {
+        'id': constants.XAPI_VERB_EXPERIENCED,
+        'display': constants.EXPERIENCED
+    },
+    'edx.ui.lms.sequence.outline.selected': {
+        'id': constants.XAPI_VERB_INITIALIZED,
+        'display': constants.INITIALIZED
+    },
+    'edx.ui.lms.outline.selected': {
+        'id': constants.XAPI_VERB_INITIALIZED,
+        'display': constants.INITIALIZED
     }
 }
 
 
+class NavigationTransformersMixin(XApiTransformer, XApiVerbTransformerMixin):
+    """
+    Base transformer class for navigation events.
+
+    This class has the common attributes for all navigation events.
+    """
+    additional_fields = ('context', )
+    verb_map = VERB_MAP
+
+
 @XApiTransformersRegistry.register('edx.ui.lms.link_clicked')
-class LinkClickedTransformer(XApiTransformer):
+class LinkClickedTransformer(NavigationTransformersMixin):
     """
     xAPI transformer for event generated when user clicks a link.
     """
-    additional_fields = ('context', )
-
-    verb = Verb(
-        id=constants.XAPI_VERB_EXPERIENCED,
-        display=LanguageMap({constants.EN: constants.EXPERIENCED})
-    )
 
     def get_object(self):
         """
@@ -117,16 +135,11 @@ class LinkClickedTransformer(XApiTransformer):
 
 @ XApiTransformersRegistry.register('edx.ui.lms.sequence.outline.selected')
 @ XApiTransformersRegistry.register('edx.ui.lms.outline.selected')
-class OutlineSelectedTransformer(XApiTransformer):
+class OutlineSelectedTransformer(NavigationTransformersMixin):
     """
     xAPI transformer for Navigation events.
     """
     additional_fields = ('context', )
-
-    verb = Verb(
-        id=constants.XAPI_VERB_INITIALIZED,
-        display=LanguageMap({constants.EN: constants.INITIALIZED})
-    )
 
     def get_object(self):
         """
@@ -165,26 +178,11 @@ class OutlineSelectedTransformer(XApiTransformer):
 @ XApiTransformersRegistry.register('edx.ui.lms.sequence.next_selected')
 @ XApiTransformersRegistry.register('edx.ui.lms.sequence.previous_selected')
 @ XApiTransformersRegistry.register('edx.ui.lms.sequence.tab_selected')
-class TabNavigationTransformer(XApiTransformer):
+class TabNavigationTransformer(NavigationTransformersMixin):
     """
     xAPI transformer for Navigation events.
     """
     additional_fields = ('context', )
-
-    def get_verb(self):
-        """
-        Get verb for xAPI transformed event.
-
-        Returns:
-            `Verb`
-        """
-        event_name = self.event['name']
-        verb = TAB_EVENTS_VERB_MAP[event_name]
-
-        return Verb(
-            id=verb['id'],
-            display=LanguageMap({constants.EN: verb['display']})
-        )
 
     def get_object(self):
         """

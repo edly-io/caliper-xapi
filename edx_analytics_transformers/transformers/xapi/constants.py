@@ -39,6 +39,7 @@ XAPI_CONTEXT_VIDEO_LENGTH = 'https://w3id.org/xapi/video/extensions/length'
 XAPI_CONTEXT_VIDEO_CC_LANGUAGE = 'https://w3id.org/xapi/video/extensions/cc-subtitle-lang'
 XAPI_CONTEXT_STARTING_POSITION = 'http://id.tincanapi.com/extension/starting-position'
 XAPI_CONTEXT_ENDING_POSITION = 'http://id.tincanapi.com/extension/ending-point'
+XAPI_CONTEXT_COMPLETION_THRESHOLD = 'https://w3id.org/xapi/video/extensions/completion-threshold'
 
 # xAPI result
 XAPI_RESULT_VIDEO_TIME = 'https://w3id.org/xapi/video/extensions/time'
@@ -58,6 +59,10 @@ UNREGISTERED = 'unregistered'
 ATTEMPTED = 'attempted'
 ANSWERED = 'answered'
 INTERACTED = 'interacted'
+PLAYED = 'played'
+PAUSED = 'paused'
+COMPLETED = 'completed'
+SEEKED = 'seeked'
 
 # TODO: confirm these
 TERMINATED = 'terminated'

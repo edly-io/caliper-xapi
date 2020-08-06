@@ -39,7 +39,7 @@ class BaseEnrollmentTransformer(XApiTransformer):
             `Activity`
         """
         course_id = self.find_nested('course_id')
-
+        # TODO: make a method to get course URL. and use that everywhere
         object_id = '{root_url}{course_root_url}'.format(
                     root_url=settings.LMS_ROOT_URL,
                     course_root_url=reverse('course_root', kwargs={

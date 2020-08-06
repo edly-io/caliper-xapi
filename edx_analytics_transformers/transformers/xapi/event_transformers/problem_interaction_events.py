@@ -15,7 +15,6 @@ from tincan import (
     InteractionComponentList,
     Context,
     ContextActivities,
-    Verb,
     Extensions,
     Result
 )
@@ -23,7 +22,10 @@ from tincan import (
 from edx_analytics_transformers.transformers.caliper.helpers import get_block_id_from_event_referrer
 from edx_analytics_transformers.transformers.xapi import constants
 from edx_analytics_transformers.transformers.xapi.registry import XApiTransformersRegistry
-from edx_analytics_transformers.transformers.xapi.transformer import XApiTransformer
+from edx_analytics_transformers.transformers.xapi.transformer import (
+    XApiTransformer,
+    XApiVerbTransformerMixin
+)
 
 # map open edx problems interation types to xAPI valid interaction types
 INTERACTION_TYPES_MAP = {
@@ -67,26 +69,12 @@ VERB_MAP = {
 }
 
 
-@XApiTransformersRegistry.register('showanswer')
-@XApiTransformersRegistry.register('edx.problem.hint.demandhint_displayed')
-class ProblemEventsTransformer(XApiTransformer):
+class BaseProblemsTransformer(XApiTransformer, XApiVerbTransformerMixin):
     """
-    Transform problem interaction events into xAPI format.
+    Base Transformer for problem interaction events.
     """
     additional_fields = ('context', )
-
-    def get_verb(self):
-        """
-        Get verb for xAPI transformed event.
-
-        Returns:
-            `Verb`
-        """
-        event_name = self.event['name']
-        return Verb(
-            id=VERB_MAP[event_name]['id'],
-            display=LanguageMap({constants.EN: VERB_MAP[event_name]['display']})
-        )
+    verb_map = VERB_MAP
 
     def get_object(self):
         """
@@ -143,8 +131,16 @@ class ProblemEventsTransformer(XApiTransformer):
         )
 
 
+@XApiTransformersRegistry.register('showanswer')
+@XApiTransformersRegistry.register('edx.problem.hint.demandhint_displayed')
+class ProblemEventsTransformer(BaseProblemsTransformer):
+    """
+    Transform problem interaction events into xAPI format.
+    """
+
+
 @XApiTransformersRegistry.register('edx.grades.problem.submitted')
-class ProblemSubmittedTransformer(ProblemEventsTransformer):
+class ProblemSubmittedTransformer(BaseProblemsTransformer):
     """
     Transform problem interaction related events into xAPI format.
     """
@@ -170,7 +166,7 @@ class ProblemSubmittedTransformer(ProblemEventsTransformer):
 
 
 @XApiTransformersRegistry.register('problem_check')
-class ProblemCheckTransformer(ProblemEventsTransformer):
+class ProblemCheckTransformer(BaseProblemsTransformer):
     """
     Transform problem interaction related events into xAPI format.
     """
