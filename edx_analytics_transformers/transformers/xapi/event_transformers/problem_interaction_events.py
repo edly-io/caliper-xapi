@@ -3,8 +3,6 @@ Transformers for problem interaction events.
 
 # TODO: Implement transformer for `edx.problem.completed`.
 """
-from logging import getLogger
-
 from django.conf import settings
 from django.urls import reverse
 

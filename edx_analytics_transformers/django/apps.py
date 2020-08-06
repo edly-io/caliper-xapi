@@ -18,7 +18,7 @@ class EdxAnalyticsTransformersConfig(AppConfig):
         Import the signals and transformers for initialization.
         """
         super(EdxAnalyticsTransformersConfig, self).ready()
-        # pylint: disable=import-outside-toplevel, unused-import
+        # pylint: disable=import-outside-toplevel, unused-import, reimported
         from edx_analytics_transformers import signals
         from edx_analytics_transformers.transformers.caliper import event_transformers
         from edx_analytics_transformers.transformers.xapi import event_transformers
