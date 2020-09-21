@@ -1,5 +1,5 @@
 """
-Exceptions related to Caliper transformation
+Exceptions related to Caliper transformation.
 """
 
 

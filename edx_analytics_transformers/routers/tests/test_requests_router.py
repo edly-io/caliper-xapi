@@ -1,5 +1,5 @@
 """
-Test the RequestsRouter
+Test the RequestsRouter.
 """
 from django.test import TestCase
 from mock import MagicMock, call, patch, sentinel

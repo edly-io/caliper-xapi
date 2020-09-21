@@ -6,6 +6,7 @@ import logging
 from eventtracking.processors.exceptions import EventEmissionExit
 
 from edx_analytics_transformers.utils.http_client import HttpClient
+from edx_analytics_transformers.utils.xapi_lrs_client import LrsClient
 from edx_analytics_transformers.django.models import RouterConfiguration
 
 
@@ -14,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 ROUTER_STRATEGY_MAPPING = {
     'AUTH_HEADERS': HttpClient,
+    'XAPI_LRS': LrsClient
 }
 
 
@@ -30,8 +32,18 @@ class RequestsRouter:
             processors (list):   list of processor instances
             backend_name (str):  name of the router backend
         """
-        self.processors = processors if processors else []
+        self.processors = processors or []
         self.backend_name = backend_name
+
+    def _copy(self, event):
+        """
+        Copy the event to a void mutation.
+
+        Currently supports only `dict` type events.
+        """
+        if isinstance(event, dict):
+            return event.copy()
+        return event
 
     def send(self, original_event, transformed_event):
         """
@@ -46,6 +58,7 @@ class RequestsRouter:
             original_event (dict):      original event dictionary
             transformed_event (dict):   transformed event dictionary
         """
+
         try:
             logger.info(
                 'Processing event %s for router with backend %s',
@@ -104,7 +117,8 @@ class RequestsRouter:
         Returns
             dict
         """
-        event = event.copy()
+        event = self._copy(event)
+
         for processor in self.processors:
             event = processor(event)
 
@@ -125,7 +139,8 @@ class RequestsRouter:
         Returns:
             dict
         """
-        event = processed_event.copy()
+
+        event = self._copy(processed_event)
 
         if 'override_args' in host:
             event.update(host['override_args'])
