@@ -8,7 +8,8 @@ pytz
 python-dateutil
 isodate
 django-model-utils
-edx-django-utils
 jsonfield2
+django-fernet-fields
 
-# TODO: Add eventtracking here
+edx-django-utils
+event-tracking
