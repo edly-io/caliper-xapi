@@ -3,10 +3,6 @@ Base transformer to add or transform common data values.
 """
 from abc import abstractmethod
 import json
-from logging import getLogger
-
-
-logger = getLogger(__name__)
 
 
 class BaseTransformer:

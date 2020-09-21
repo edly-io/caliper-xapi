@@ -13,9 +13,12 @@ class HttpClient:
     """
     A generic HTTP Client.
     """
-    def __init__(self, url='', auth_scheme='', auth_key='', headers=None):
+    def __init__(self, url='', auth_scheme='', auth_key='', headers=None, **options):
         """
         Initialize the client with provided configurations.
+
+        This client supports any paramters that can be passed to `requests.post` call.
+        https://requests.readthedocs.io/en/latest/api/
 
         url (str)        :     URL for the event consumer.
         auth_scheme (str) :     Scheme used for authentication.
@@ -26,6 +29,7 @@ class HttpClient:
         self.AUTH_SCHEME = auth_scheme
         self.AUTH_KEY = auth_key
         self.HEADERS = headers or {}
+        self.options = options
 
     def get_auth_header(self):
         """
@@ -52,5 +56,13 @@ class HttpClient:
         """
         headers = self.HEADERS.copy()
         headers.update(self.get_auth_header())
+
+        options = self.options.copy()
+        options.update({
+            'url': self.URL,
+            'json': json,
+            'headers': headers,
+        })
+
         logger.info('Sending event json to %s', self.URL)
-        return requests.post(self.URL, json=json, headers=headers)
+        return requests.post(**options)

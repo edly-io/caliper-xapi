@@ -104,7 +104,7 @@ class TestRequestsRouter(TestCase):
             self.sample_event['name'],
             'test',
             exc_info=True
-        ), mocked_logger.info.mock_calls)
+        ), mocked_logger.error.mock_calls)
 
     @patch('edx_analytics_transformers.utils.http_client.requests.post')
     @patch('edx_analytics_transformers.routers.requests_router.logger')
@@ -116,7 +116,7 @@ class TestRequestsRouter(TestCase):
 
         self.assertIn(
             call('Could not find an enabled router configurations for backend %s', 'test'),
-            mocked_logger.info.mock_calls
+            mocked_logger.error.mock_calls
         )
 
     @patch('edx_analytics_transformers.utils.http_client.requests.post')
@@ -169,7 +169,7 @@ class TestRequestsRouter(TestCase):
 
         mocked_post.assert_has_calls([
             call(
-                ROUTER_CONFIG_FIXTURE[0]['host_configurations']['url'],
+                url=ROUTER_CONFIG_FIXTURE[0]['host_configurations']['url'],
                 json=overridden_event,
                 headers={
                     'Authorization': 'Bearer test_key'

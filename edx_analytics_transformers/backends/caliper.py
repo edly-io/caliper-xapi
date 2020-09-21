@@ -58,7 +58,7 @@ class CaliperBackend:
             Any Exception
         """
         event_name = event.get('name')
-        logger.info('Going to transform event "%s" into Caliper format', event_name)
+        logger.debug('Going to transform event "%s" into Caliper format', event_name)
 
         try:
             transformed_event = CaliperTransformersRegistry.get_transformer(event).transform()
@@ -73,7 +73,7 @@ class CaliperBackend:
                 ' Caliper format. Error: %s', event_name, ex)
             raise
 
-        logger.info(
+        logger.debug(
             'Successfully transformed event "%s" into Caliper format',
             event_name
         )
@@ -82,7 +82,7 @@ class CaliperBackend:
 
     def route_event(self, original_event, transformed_event):
         """
-        Router the event through the configured routers.
+        Route the event through the configured routers.
 
         Every router configured to be used MUST support the transfromed event type.
 
@@ -90,5 +90,5 @@ class CaliperBackend:
             event (dict):   Event to be delivered.
         """
         for name, router in self.routers.items():
-            logger.info('Routing event to router %s', name)
+            logger.debug('Routing event to router %s', name)
             router.send(original_event, transformed_event)

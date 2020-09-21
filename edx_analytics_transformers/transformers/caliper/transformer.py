@@ -74,8 +74,8 @@ class CaliperTransformer(BaseTransformer):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            logger.info('User with username "%s" does not exist. '
-                        'Cannot generate anonymous ID', username)
+            logger.error('User with username "%s" does not exist. '
+                         'Cannot generate anonymous ID', username)
 
             anonymous_id = 'anonymous'
         else:

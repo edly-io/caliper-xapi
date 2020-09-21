@@ -5,9 +5,9 @@ import logging
 
 from django.db import models
 from model_utils.models import TimeStampedModel
-from jsonfield.fields import JSONField
 
 from edx_django_utils.cache import TieredCache, get_cache_key
+from edx_analytics_transformers.utils.fields import EncryptedJSONField
 
 
 logger = logging.getLogger(__name__)
@@ -70,7 +70,7 @@ class RouterConfiguration(TimeStampedModel):
         verbose_name='Is Enabled'
     )
 
-    configurations = JSONField()
+    configurations = EncryptedJSONField()
 
     class Meta:
         verbose_name = 'Router Configurations'
@@ -103,14 +103,14 @@ class RouterConfiguration(TimeStampedModel):
         cache_response = TieredCache.get_cached_response(router_cache_key)
 
         if cache_response.is_found:
-            logger.info('Router is found in cache for backend "%s"', backend_name)
+            logger.debug('Router is found in cache for backend "%s"', backend_name)
             router = cache_response.value
         else:
-            logger.info('No router was found in cache for backend "%s"', backend_name)
+            logger.debug('No router was found in cache for backend "%s"', backend_name)
             router = cls._get_latest_enabled_router(backend_name=backend_name)
 
             TieredCache.set_all_tiers(router_cache_key, router)
-            logger.info('Router has been stored in cache for backend "%s"', backend_name)
+            logger.debug('Router has been stored in cache for backend "%s"', backend_name)
 
         return router
 

@@ -68,12 +68,12 @@ class TestRouterConfiguration(TestCase):
         mocked_objects_filter.assert_called_once_with(is_enabled=True, backend_name='first')
         self.assertIn(
             call('No router was found in cache for backend "%s"', 'first'),
-            mocked_logger.info.mock_calls
+            mocked_logger.debug.mock_calls
         )
 
         self.assertIn(
             call('Router has been stored in cache for backend "%s"', 'first'),
-            mocked_logger.info.mock_calls
+            mocked_logger.debug.mock_calls
         )
 
         mocked_logger.reset_mock()
@@ -81,7 +81,7 @@ class TestRouterConfiguration(TestCase):
 
         router = RouterConfiguration.get_latest_enabled_router(backend_name='first')
         mocked_objects_filter.assert_not_called()
-        mocked_logger.info.assert_called_once_with('Router is found in cache for backend "%s"', 'first')
+        mocked_logger.debug.assert_called_once_with('Router is found in cache for backend "%s"', 'first')
 
         self.assertEqual(router, first_router)
 
