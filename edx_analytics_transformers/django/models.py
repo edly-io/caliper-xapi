@@ -4,7 +4,7 @@ Models for filtering of events
 import logging
 
 from django.db import models
-from model_utils.models import TimeStampedModel
+from simple_history.models import HistoricalRecords
 
 from edx_django_utils.cache import TieredCache, get_cache_key
 from edx_analytics_transformers.utils.fields import EncryptedJSONField
@@ -48,7 +48,7 @@ def get_value_from_dotted_path(dict_obj, dotted_key):
     return result
 
 
-class RouterConfiguration(TimeStampedModel):
+class RouterConfiguration(models.Model):
     """
     Configurations for filtering and then routing events to hosts.
     """
@@ -58,6 +58,7 @@ class RouterConfiguration(TimeStampedModel):
         verbose_name='Backend name',
         null=False,
         blank=False,
+        unique=True,
         help_text=(
             'Name of the tracking backend on which this router should be applied.'
             '<br/>'
@@ -72,10 +73,12 @@ class RouterConfiguration(TimeStampedModel):
 
     configurations = EncryptedJSONField()
 
+    history = HistoricalRecords()
+
     class Meta:
         verbose_name = 'Router Configurations'
         verbose_name_plural = 'Router Configurations'
-        ordering = ('backend_name', 'is_enabled', '-modified')
+        ordering = ('backend_name', 'is_enabled')
 
     def __str__(self):
         return '{id} - {backend} - {is_enabled}'.format(
@@ -85,12 +88,12 @@ class RouterConfiguration(TimeStampedModel):
         )
 
     @classmethod
-    def get_latest_enabled_router(cls, backend_name):
+    def get_enabled_router(cls, backend_name):
         """
-        Return the last modified, enabled router for the backend matching the `backend_name`.
+        Return the enabled router for the backend matching the `backend_name`.
 
         First look for the router in the cache and return its value from there if found.
-        If not found in the cache, call the `_get_latest_enabled_router` method to get the
+        If not found in the cache, call the `_get_enabled_router` method to get the
         router and store it in the cache before returning it.
 
         Arguments:
@@ -107,7 +110,7 @@ class RouterConfiguration(TimeStampedModel):
             router = cache_response.value
         else:
             logger.debug('No router was found in cache for backend "%s"', backend_name)
-            router = cls._get_latest_enabled_router(backend_name=backend_name)
+            router = cls._get_enabled_router(backend_name=backend_name)
 
             TieredCache.set_all_tiers(router_cache_key, router)
             logger.debug('Router has been stored in cache for backend "%s"', backend_name)
@@ -115,9 +118,9 @@ class RouterConfiguration(TimeStampedModel):
         return router
 
     @classmethod
-    def _get_latest_enabled_router(cls, backend_name):
+    def _get_enabled_router(cls, backend_name):
         """
-        Return the last modified, enabled router for the backend matching the `backend_name`.
+        Return the enabled router for the backend matching the `backend_name`.
 
         Return `None` if there is no filter matching the criteria.
 
@@ -127,7 +130,10 @@ class RouterConfiguration(TimeStampedModel):
         Returns:
             RouterConfiguration or None
         """
-        return cls.objects.filter(backend_name=backend_name, is_enabled=True).order_by('modified').last()
+        try:
+            return cls.objects.get(is_enabled=True, backend_name=backend_name).history.most_recent()
+        except cls.DoesNotExist:
+            return None
 
     def get_allowed_hosts(self, original_event):
         """

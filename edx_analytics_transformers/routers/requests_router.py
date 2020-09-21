@@ -64,9 +64,9 @@ class RequestsRouter:
             return
 
         logger.debug('Successfully processed event %s for router with backend %s',
-                    original_event['name'], self.backend_name)
+                     original_event['name'], self.backend_name)
 
-        router = RouterConfiguration.get_latest_enabled_router(self.backend_name)
+        router = RouterConfiguration.get_enabled_router(self.backend_name)
 
         if not router:
             logger.error('Could not find an enabled router configurations for backend %s', self.backend_name)
@@ -136,7 +136,7 @@ class RequestsRouter:
             router_type (str)   : decides the client to use for sending the event
             host_config (dict)  : contains configurations for the host.
         """
-        logger.info(
+        logger.debug(
             'Routing event "%s" for router type "%s"',
             event_name,
             router_type

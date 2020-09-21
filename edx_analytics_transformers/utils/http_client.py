@@ -64,5 +64,5 @@ class HttpClient:
             'headers': headers,
         })
 
-        logger.info('Sending event json to %s', self.URL)
+        logger.debug('Sending event json to %s', self.URL)
         return requests.post(**options)

@@ -24,6 +24,7 @@ ddt==1.4.1                # via -r requirements/test.txt
 distlib==0.3.1            # via -r requirements/travis.txt, virtualenv
 django-fernet-fields==0.6  # via -r requirements/test.txt
 django-model-utils==4.0.0  # via -r requirements/test.txt
+django-simple-history==2.11.0  # via -r requirements/test.txt
 django-waffle==2.0.0      # via -r requirements/test.txt, edx-django-utils
 django==2.2.16            # via -c requirements/constraints.txt, -r requirements/test.txt, django-fernet-fields, django-model-utils, edx-django-utils, event-tracking, jsonfield2
 docutils==0.16            # via sphinx
@@ -68,7 +69,7 @@ pytest==6.0.2             # via -r requirements/test.txt, pytest-cov, pytest-dja
 python-dateutil==2.8.1    # via -r requirements/test.txt, faker
 pytz==2020.1              # via -r requirements/test.txt, babel, celery, django, event-tracking
 requests==2.24.0          # via -r requirements/travis.txt, codecov, sphinx
-six==1.15.0               # via -r requirements/pip-tools.txt, -r requirements/test.txt, -r requirements/travis.txt, astroid, cryptography, edx-lint, event-tracking, isodate, mock, packaging, pip-tools, python-dateutil, tox, virtualenv
+six==1.15.0               # via -r requirements/pip-tools.txt, -r requirements/test.txt, -r requirements/travis.txt, astroid, cryptography, django-simple-history, edx-lint, event-tracking, isodate, mock, packaging, pip-tools, python-dateutil, tox, virtualenv
 snowballstemmer==2.0.0    # via sphinx
 sphinx==3.2.1             # via -r requirements/dev.in
 sphinxcontrib-applehelp==1.0.2  # via sphinx

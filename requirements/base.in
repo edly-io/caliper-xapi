@@ -10,6 +10,7 @@ isodate
 django-model-utils
 jsonfield2
 django-fernet-fields
+django-simple-history
 
 edx-django-utils
 event-tracking
