@@ -5,6 +5,7 @@ from logging import getLogger
 
 from django.contrib.auth import get_user_model
 
+# pylint: disable=import-error
 from openedx.features.enterprise_support.api import EnterpriseApiClient, enterprise_enabled
 
 
@@ -12,7 +13,7 @@ logger = getLogger(__name__)
 User = get_user_model()
 
 
-class EnterpriseContextProvider():
+class EnterpriseContextProvider:
     """
     Processor to add enterprise information for the user.
     """
@@ -22,8 +23,6 @@ class EnterpriseContextProvider():
         Add enterprise information for the user in current
         event
         """
-        import pdb
-        pdb.set_trace()
         if not enterprise_enabled():
             logger.debug('Enterprise service is disabled. Cannot add enterprise information')
             return event
@@ -37,16 +36,14 @@ class EnterpriseContextProvider():
             user = User.objects.get(username=username)
             enterprise_learner_data = EnterpriseApiClient(user=user).fetch_enterprise_learner_data(user)
             if enterprise_learner_data['results']:
-                event['context']['enterprise_uuid'] = enterprise_learner_data['results'][0]['enterprise_customer']['uuid']
+                event['context']['enterprise_uuid'] = (enterprise_learner_data['results'][0]
+                                                       ['enterprise_customer']['uuid'])
 
         except User.DoesNotExist:
             logger.error('Cannot get enterprise information for non-existent user {}'.format(username))
             return event
-        except (ConnectionError,):
-            logger.error('Connection error occurred while trying to get enterprise'
-                         ' information for user {}'.format(username))
-            return event
-        except Exception:
+
+        except Exception: # pylint: disable=broad-except
             logger.exception('Exception occurred while trying to get enterprise information '
                              'for the user {}'.format(username), exc_info=True)
             return event
