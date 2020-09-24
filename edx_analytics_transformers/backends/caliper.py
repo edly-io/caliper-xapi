@@ -9,7 +9,6 @@ from edx_analytics_transformers.transformers.caliper.registry import CaliperTran
 
 
 caliper_logger = getLogger('caliper_tracking')
-logger = getLogger(__name__)
 
 
 class CaliperBackend(BaseTransformerBackend):

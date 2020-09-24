@@ -13,7 +13,7 @@ class RouterConfigurationAdmin(SimpleHistoryAdmin):
     Admin model class for RouterConfiguration model.
     """
 
-    list_display = ('backend_name', 'is_enabled', 'configurations',)
+    list_display = ('backend_name', 'enterprise_uuid', 'is_enabled', 'configurations',)
     history_list_display = ('status')
 
 

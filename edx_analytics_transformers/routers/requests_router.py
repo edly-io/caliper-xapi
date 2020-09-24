@@ -66,7 +66,9 @@ class RequestsRouter:
         logger.debug('Successfully processed event %s for router with backend %s',
                      original_event['name'], self.backend_name)
 
-        router = RouterConfiguration.get_enabled_router(self.backend_name)
+        enterprise_uuid = original_event['context'].get('enterprise_uuid')
+
+        router = RouterConfiguration.get_enabled_router(self.backend_name, enterprise_uuid)
 
         if not router:
             logger.error('Could not find an enabled router configurations for backend %s', self.backend_name)

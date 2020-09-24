@@ -56,7 +56,6 @@ class BaseTransformerBackend:
             ANY:           transformed event
         """
         event_name = event.get('name')
-        logger.info('Going to transform event "%s" using %s', event_name, self.__class__.__name__)
 
         try:
             transformed_event = self.get_transformed_event(event)
@@ -71,7 +70,7 @@ class BaseTransformerBackend:
                 ' %s backend. Error: %s', event_name, self.__class__.__name__, ex)
             raise
 
-        logger.info(
+        logger.debug(
             'Successfully transformed event "%s" using %s',
             event_name, self.__class__.__name__
         )
@@ -108,5 +107,5 @@ class BaseTransformerBackend:
             transformed_event (ANY):   Event to be delivered.
         """
         for name, router in self.routers.items():
-            logger.info('Routing event to router %s', name)
+            logger.debug('Routing event to router %s', name)
             router.send(original_event, transformed_event)

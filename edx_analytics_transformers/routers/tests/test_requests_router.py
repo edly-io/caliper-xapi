@@ -66,6 +66,9 @@ class TestRequestsRouter(TestCase):
             'data': {
                 'key': 'value'
             },
+            'context': {
+                'username': 'testuser'
+            },
             'session': '0000'
         }
 

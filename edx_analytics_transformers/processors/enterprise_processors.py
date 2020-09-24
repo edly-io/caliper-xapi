@@ -24,7 +24,7 @@ class EnterpriseContextProvider:
         event
         """
         if not enterprise_enabled():
-            logger.debug('Enterprise service is disabled. Cannot add enterprise information')
+            logger.info('Enterprise service is disabled. Cannot add enterprise information')
             return event
 
         username = event['context'].get('username')

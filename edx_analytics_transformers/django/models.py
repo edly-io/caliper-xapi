@@ -113,50 +113,76 @@ class RouterConfiguration(models.Model):
         )
 
     @classmethod
-    def get_enabled_router(cls, backend_name):
+    def get_enabled_router(cls, backend_name, enterprise_uuid=None):
         """
-        Return the enabled router for the backend matching the `backend_name`.
+        Return the enabled router for the backend matching the `backend_name` and
+        optionally matching the `enterprise_uuid`.
 
         First look for the router in the cache and return its value from there if found.
         If not found in the cache, call the `_get_enabled_router` method to get the
         router and store it in the cache before returning it.
 
         Arguments:
-            backend_name (str):    Name of the backend for which the router is required.
+            backend_name (str):     Name of the backend for which the router is required.
+            enterprise_uuid (str):  enterprise UUID for which the router is required.
 
         Returns:
             RouterConfiguration or None
         """
-        router_cache_key = get_cache_key(namespace=ROUTER_CACHE_NAMESPACE, backend_name=backend_name)
+        router_cache_key = get_cache_key(
+            namespace=ROUTER_CACHE_NAMESPACE,
+            backend_name=backend_name,
+            enterprise_uuid=enterprise_uuid
+        )
+
         cache_response = TieredCache.get_cached_response(router_cache_key)
 
         if cache_response.is_found:
-            logger.debug('Router is found in cache for backend "%s"', backend_name)
+            logger.debug(
+                'Router is found in cache for backend "%s" and enterprise "%s"',
+                backend_name,
+                enterprise_uuid
+            )
             router = cache_response.value
         else:
-            logger.debug('No router was found in cache for backend "%s"', backend_name)
-            router = cls._get_enabled_router(backend_name=backend_name)
+            logger.debug(
+                'No router was found in cache for backend "%s" and enterprise "%s"',
+                backend_name,
+                enterprise_uuid
+            )
+
+            router = cls._get_enabled_router(backend_name=backend_name, enterprise_uuid=enterprise_uuid)
 
             TieredCache.set_all_tiers(router_cache_key, router)
-            logger.debug('Router has been stored in cache for backend "%s"', backend_name)
+            logger.debug(
+                'Router has been stored in cache for backend "%s" and enterprise "%s"',
+                backend_name,
+                enterprise_uuid
+            )
 
         return router
 
     @classmethod
-    def _get_enabled_router(cls, backend_name):
+    def _get_enabled_router(cls, backend_name, enterprise_uuid=None):
         """
-        Return the enabled router for the backend matching the `backend_name`.
+        Return the enabled router for the backend matching the `backend_name` and
+        optionally matching the `enterprise_uuid`.
 
         Return `None` if there is no filter matching the criteria.
 
         Arguments:
             backend_name (str):    Name of the backend for which the filter is required.
+            enterprise_uuid (str):  enterprise UUID for which the router is required.
 
         Returns:
             RouterConfiguration or None
         """
         try:
-            return cls.objects.get(is_enabled=True, backend_name=backend_name).history.most_recent()
+            return cls.objects.get(
+                is_enabled=True,
+                backend_name=backend_name,
+                enterprise_uuid=enterprise_uuid
+            ).history.most_recent()
         except cls.DoesNotExist:
             return None
 
