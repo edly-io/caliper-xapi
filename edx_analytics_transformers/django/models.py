@@ -3,6 +3,7 @@ Models for filtering of events
 """
 import logging
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from simple_history.models import HistoricalRecords
 
@@ -58,27 +59,51 @@ class RouterConfiguration(models.Model):
         verbose_name='Backend name',
         null=False,
         blank=False,
-        unique=True,
         help_text=(
             'Name of the tracking backend on which this router should be applied.'
             '<br/>'
             'Please note that this field is <b>case sensitive.</b>'
         )
     )
-
+    enterprise_uuid = models.UUIDField(
+        verbose_name='Enterprise UUID',
+        null=True,
+        blank=True,
+    )
     is_enabled = models.BooleanField(
         default=True,
         verbose_name='Is Enabled'
     )
-
     configurations = EncryptedJSONField()
-
     history = HistoricalRecords()
 
     class Meta:
         verbose_name = 'Router Configurations'
         verbose_name_plural = 'Router Configurations'
         ordering = ('backend_name', 'is_enabled')
+        unique_together = (('backend_name', 'enterprise_uuid'), )
+
+    def clean(self):
+        """
+        Make sure that unique together constraint is applied to fields even
+        if they have `None` stored in them.
+
+        Django's default `unique_together` doesn't work if the fields are nullable.
+        """
+        existing = RouterConfiguration.objects.filter(
+            backend_name=self.backend_name,
+            enterprise_uuid=self.enterprise_uuid
+        )
+
+        # Since we are using `HistoricalRecords` for managing the history,
+        # everytime the configuration is updated, a new object is created.
+        # We need to check that all existing configurations have same ID as the
+        # current one (that means the existing objects are just history records
+        # of the same configuration).
+        for config in existing:
+            if config.id != self.id:
+                raise ValidationError('Configuration with matching enterprise_uuid '
+                                      'and backend_name already exists')
 
     def __str__(self):
         return '{id} - {backend} - {is_enabled}'.format(
