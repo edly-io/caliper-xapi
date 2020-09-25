@@ -25,3 +25,23 @@ class TestTransformerRegistry(TestCase):
             TransformerRegistry.get_transformer({
                 'name': 'test'
             })
+
+    def test_overriding_existing_transformer(self):
+        FIRST, SECOND = 'FIRST', 'SECOND'
+
+        transformer_1 = MagicMock(return_value=FIRST)
+        # transformer_1.return_value = FIRST
+        transformer_2 = MagicMock()
+        transformer_2.return_value = SECOND
+
+        TransformerRegistry.register('test')(transformer_1)
+        transformer = TransformerRegistry.get_transformer({
+            'name': 'test'
+        })
+        self.assertEqual(transformer, FIRST)
+
+        TransformerRegistry.register('test')(transformer_2)
+        transformer = TransformerRegistry.get_transformer({
+            'name': 'test'
+        })
+        self.assertEqual(transformer, SECOND)

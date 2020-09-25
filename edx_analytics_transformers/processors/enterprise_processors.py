@@ -43,7 +43,7 @@ class EnterpriseContextProvider:
             logger.error('Cannot get enterprise information for non-existent user {}'.format(username))
             return event
 
-        except Exception: # pylint: disable=broad-except
+        except Exception:   # pylint: disable=broad-except
             logger.exception('Exception occurred while trying to get enterprise information '
                              'for the user {}'.format(username), exc_info=True)
             return event
