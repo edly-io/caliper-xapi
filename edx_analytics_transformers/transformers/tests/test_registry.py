@@ -30,7 +30,6 @@ class TestTransformerRegistry(TestCase):
         FIRST, SECOND = 'FIRST', 'SECOND'
 
         transformer_1 = MagicMock(return_value=FIRST)
-        # transformer_1.return_value = FIRST
         transformer_2 = MagicMock()
         transformer_2.return_value = SECOND
 

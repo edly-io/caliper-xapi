@@ -7,10 +7,8 @@ pymongo>=2.7.2,<4.0.0
 pytz
 python-dateutil
 isodate
-django-model-utils
 jsonfield2
 django-fernet-fields
-django-simple-history
+django-config-models
 
-edx-django-utils
 event-tracking

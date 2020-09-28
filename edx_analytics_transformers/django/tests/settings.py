@@ -15,14 +15,12 @@ SITE_ID = 1
 
 MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware',
 )
 
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'simple_history',
-
+    'config_models',
     'edx_analytics_transformers.django',
 ]
 

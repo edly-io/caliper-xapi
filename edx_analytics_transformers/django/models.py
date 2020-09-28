@@ -3,11 +3,9 @@ Models for filtering of events
 """
 import logging
 
-from django.core.exceptions import ValidationError
+from config_models.models import ConfigurationModel
 from django.db import models
-from simple_history.models import HistoricalRecords
 
-from edx_django_utils.cache import TieredCache, get_cache_key
 from edx_analytics_transformers.utils.fields import EncryptedJSONField
 
 
@@ -49,11 +47,14 @@ def get_value_from_dotted_path(dict_obj, dotted_key):
     return result
 
 
-class RouterConfiguration(models.Model):
+# .. toggle_description: Configuration models defined for backend_name and enterprise_uuid combinations.
+# will be used for system-wide events if no enterprise_uuid is set.
+# .. toggle_implementation: ConfigurationModel
+class RouterConfiguration(ConfigurationModel):
     """
     Configurations for filtering and then routing events to hosts.
     """
-
+    KEY_FIELDS = ('backend_name', 'enterprise_uuid')
     backend_name = models.CharField(
         max_length=50,
         verbose_name='Backend name',
@@ -70,46 +71,18 @@ class RouterConfiguration(models.Model):
         null=True,
         blank=True,
     )
-    is_enabled = models.BooleanField(
-        default=True,
-        verbose_name='Is Enabled'
-    )
+
     configurations = EncryptedJSONField()
-    history = HistoricalRecords()
 
     class Meta:
-        verbose_name = 'Router Configurations'
+        verbose_name = 'Router Configuration'
         verbose_name_plural = 'Router Configurations'
-        ordering = ('backend_name', 'is_enabled')
-        unique_together = (('backend_name', 'enterprise_uuid'), )
-
-    def clean(self):
-        """
-        Make sure that unique together constraint is applied to fields even
-        if they have `None` stored in them.
-
-        Django's default `unique_together` doesn't work if the fields are nullable.
-        """
-        existing = RouterConfiguration.objects.filter(
-            backend_name=self.backend_name,
-            enterprise_uuid=self.enterprise_uuid
-        )
-
-        # Since we are using `HistoricalRecords` for managing the history,
-        # everytime the configuration is updated, a new object is created.
-        # We need to check that all existing configurations have same ID as the
-        # current one (that means the existing objects are just history records
-        # of the same configuration).
-        for config in existing:
-            if config.id != self.id:
-                raise ValidationError('Configuration with matching enterprise_uuid '
-                                      'and backend_name already exists')
 
     def __str__(self):
-        return '{id} - {backend} - {is_enabled}'.format(
+        return '{id} - {backend} - {enabled}'.format(
             id=self.pk,
             backend=self.backend_name,
-            is_enabled='Enabled' if self.is_enabled else 'Disabled'
+            enabled='Enabled' if self.enabled else 'Disabled'
         )
 
     @classmethod
@@ -118,10 +91,6 @@ class RouterConfiguration(models.Model):
         Return the enabled router for the backend matching the `backend_name` and
         optionally matching the `enterprise_uuid`.
 
-        First look for the router in the cache and return its value from there if found.
-        If not found in the cache, call the `_get_enabled_router` method to get the
-        router and store it in the cache before returning it.
-
         Arguments:
             backend_name (str):     Name of the backend for which the router is required.
             enterprise_uuid (str):  enterprise UUID for which the router is required.
@@ -129,62 +98,8 @@ class RouterConfiguration(models.Model):
         Returns:
             RouterConfiguration or None
         """
-        router_cache_key = get_cache_key(
-            namespace=ROUTER_CACHE_NAMESPACE,
-            backend_name=backend_name,
-            enterprise_uuid=enterprise_uuid
-        )
-
-        cache_response = TieredCache.get_cached_response(router_cache_key)
-
-        if cache_response.is_found:
-            logger.debug(
-                'Router is found in cache for backend "%s" and enterprise "%s"',
-                backend_name,
-                enterprise_uuid
-            )
-            router = cache_response.value
-        else:
-            logger.debug(
-                'No router was found in cache for backend "%s" and enterprise "%s"',
-                backend_name,
-                enterprise_uuid
-            )
-
-            router = cls._get_enabled_router(backend_name=backend_name, enterprise_uuid=enterprise_uuid)
-
-            TieredCache.set_all_tiers(router_cache_key, router)
-            logger.debug(
-                'Router has been stored in cache for backend "%s" and enterprise "%s"',
-                backend_name,
-                enterprise_uuid
-            )
-
-        return router
-
-    @classmethod
-    def _get_enabled_router(cls, backend_name, enterprise_uuid=None):
-        """
-        Return the enabled router for the backend matching the `backend_name` and
-        optionally matching the `enterprise_uuid`.
-
-        Return `None` if there is no filter matching the criteria.
-
-        Arguments:
-            backend_name (str):    Name of the backend for which the filter is required.
-            enterprise_uuid (str):  enterprise UUID for which the router is required.
-
-        Returns:
-            RouterConfiguration or None
-        """
-        try:
-            return cls.objects.get(
-                is_enabled=True,
-                backend_name=backend_name,
-                enterprise_uuid=enterprise_uuid
-            ).history.most_recent()
-        except cls.DoesNotExist:
-            return None
+        router_config = cls.current(backend_name, enterprise_uuid)
+        return router_config if router_config.enabled else None
 
     def get_allowed_hosts(self, original_event):
         """

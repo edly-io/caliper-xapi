@@ -127,7 +127,7 @@ class TestRequestsRouter(TestCase):
     def test_with_no_available_hosts(self, mocked_logger, mocked_post):
         RouterConfigurationFactory.create(
             backend_name='test_backend',
-            is_enabled=True,
+            enabled=True,
             configurations=ROUTER_CONFIG_FIXTURE[1:1]
         )
 
@@ -157,7 +157,7 @@ class TestRequestsRouter(TestCase):
 
         RouterConfigurationFactory.create(
             backend_name='test_routing',
-            is_enabled=True,
+            enabled=True,
             configurations=ROUTER_CONFIG_FIXTURE
         )
 

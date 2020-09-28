@@ -3,12 +3,12 @@ Contains Admin class(es) for the django app
 """
 from django.contrib import admin
 
-from simple_history.admin import SimpleHistoryAdmin
+from config_models.admin import KeyedConfigurationModelAdmin
 
 from edx_analytics_transformers.django.models import RouterConfiguration
 
 
-class RouterConfigurationAdmin(SimpleHistoryAdmin):
+class RouterConfigurationAdmin(KeyedConfigurationModelAdmin):
     """
     Admin model class for RouterConfiguration model.
     """

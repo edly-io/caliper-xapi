@@ -19,5 +19,4 @@ class EdxAnalyticsTransformersConfig(AppConfig):
         """
         super(EdxAnalyticsTransformersConfig, self).ready()
         # pylint: disable=import-outside-toplevel, unused-import
-        from edx_analytics_transformers import signals
         from edx_analytics_transformers.transformers.caliper import event_transformers
