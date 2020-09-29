@@ -17,7 +17,7 @@ ROUTER_STRATEGY_MAPPING = {
 }
 
 
-class RequestsRouter:
+class EventsRouter:
     """
     Router to send events to hosts using requests library.
     """
@@ -38,9 +38,10 @@ class RequestsRouter:
         Send the event to configured routers after processing it.
 
         Event is processed through the configured processors. A router config
-        object matching the backend_name (and that was modified last) is used
+        object matching the backend_name and enterprise_uuid is used
         to get the list of hosts to which the event is required to be delivered to.
-        `requests` module is then used to send the event to such hosts.
+        Then a client as per the router configurations will be used to deliver the
+        event.
 
         Arguments:
             original_event (dict):      original event dictionary
@@ -130,7 +131,7 @@ class RequestsRouter:
 
     def dispatch_event(self, event_name, event, router_type, host_config):
         """
-        Send event to configured host.
+        Send event to configured client.
 
         Arguments:
             event_name (str)    : name of the original event

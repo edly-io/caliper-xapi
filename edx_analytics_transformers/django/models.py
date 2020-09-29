@@ -12,9 +12,6 @@ from edx_analytics_transformers.utils.fields import EncryptedJSONField
 logger = logging.getLogger(__name__)
 
 
-ROUTER_CACHE_NAMESPACE = 'edx_analytics.request_router'
-
-
 def get_value_from_dotted_path(dict_obj, dotted_key):
     """
     Map the dotted key to nested keys for dict and return the matching value.

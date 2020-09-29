@@ -1,5 +1,5 @@
 """
-Test the RequestsRouter
+Test the EventsRouter
 """
 from django.test import TestCase
 from mock import MagicMock, call, patch, sentinel
@@ -7,7 +7,7 @@ from mock import MagicMock, call, patch, sentinel
 from eventtracking.processors.exceptions import EventEmissionExit
 
 from edx_analytics_transformers.utils.http_client import HttpClient
-from edx_analytics_transformers.routers.requests_router import RequestsRouter
+from edx_analytics_transformers.routers.events_router import EventsRouter
 from edx_analytics_transformers.django.tests.factories import RouterConfigurationFactory
 
 
@@ -52,9 +52,9 @@ ROUTER_CONFIG_FIXTURE = [
 ]
 
 
-class TestRequestsRouter(TestCase):
+class TestEventsRouter(TestCase):
     """
-    Test the RequestsRouter
+    Test the EventsRouter
     """
 
     def setUp(self):
@@ -81,10 +81,10 @@ class TestRequestsRouter(TestCase):
             },
         }
 
-        self.router = RequestsRouter(processors=[], backend_name='test')
+        self.router = EventsRouter(processors=[], backend_name='test')
 
     @patch('edx_analytics_transformers.utils.http_client.requests.post')
-    @patch('edx_analytics_transformers.routers.requests_router.logger')
+    @patch('edx_analytics_transformers.routers.events_router.logger')
     def test_with_processor_exception(self, mocked_logger, mocked_post):
         processors = [
             MagicMock(return_value=self.transformed_event),
@@ -93,7 +93,7 @@ class TestRequestsRouter(TestCase):
         ]
         processors[1].side_effect = EventEmissionExit
 
-        router = RequestsRouter(processors=processors, backend_name='test')
+        router = EventsRouter(processors=processors, backend_name='test')
         router.send(self.sample_event, self.transformed_event)
 
         processors[0].assert_called_once_with(self.transformed_event)
@@ -110,9 +110,9 @@ class TestRequestsRouter(TestCase):
         ), mocked_logger.error.mock_calls)
 
     @patch('edx_analytics_transformers.utils.http_client.requests.post')
-    @patch('edx_analytics_transformers.routers.requests_router.logger')
+    @patch('edx_analytics_transformers.routers.events_router.logger')
     def test_with_no_router_configurations_available(self, mocked_logger, mocked_post):
-        router = RequestsRouter(processors=[], backend_name='test')
+        router = EventsRouter(processors=[], backend_name='test')
         router.send(self.sample_event, self.transformed_event)
 
         mocked_post.assert_not_called()
@@ -123,7 +123,7 @@ class TestRequestsRouter(TestCase):
         )
 
     @patch('edx_analytics_transformers.utils.http_client.requests.post')
-    @patch('edx_analytics_transformers.routers.requests_router.logger')
+    @patch('edx_analytics_transformers.routers.events_router.logger')
     def test_with_no_available_hosts(self, mocked_logger, mocked_post):
         RouterConfigurationFactory.create(
             backend_name='test_backend',
@@ -131,7 +131,7 @@ class TestRequestsRouter(TestCase):
             configurations=ROUTER_CONFIG_FIXTURE[1:1]
         )
 
-        router = RequestsRouter(processors=[], backend_name='test_backend')
+        router = EventsRouter(processors=[], backend_name='test_backend')
         router.send(self.sample_event, self.transformed_event)
 
         mocked_post.assert_not_called()
@@ -161,9 +161,9 @@ class TestRequestsRouter(TestCase):
             configurations=ROUTER_CONFIG_FIXTURE
         )
 
-        router = RequestsRouter(processors=[], backend_name='test_routing')
+        router = EventsRouter(processors=[], backend_name='test_routing')
 
-        with patch.dict('edx_analytics_transformers.routers.requests_router.ROUTER_STRATEGY_MAPPING', MOCKED_MAP):
+        with patch.dict('edx_analytics_transformers.routers.events_router.ROUTER_STRATEGY_MAPPING', MOCKED_MAP):
             router.send(self.sample_event, self.transformed_event)
 
         # test the HTTP client
